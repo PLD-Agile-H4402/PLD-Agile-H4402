@@ -12,10 +12,15 @@ import java.util.List;
  */
 public class Map {
     private java.util.Map<Long, Node> nodes;
-    private final Node warehouse;
-    private final LocalTime startingHour;
+    private Node warehouse;
+    private LocalTime startingHour;
     private List<Delivery> deliveries;
 
+    public Map() {
+        this.nodes = new HashMap();
+        this.deliveries = new ArrayList();
+    }
+    
     public Map(Node warehouse, LocalTime startingHour) {
         this.nodes = new HashMap();
         this.warehouse = warehouse;
