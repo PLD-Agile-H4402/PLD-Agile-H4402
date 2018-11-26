@@ -8,8 +8,6 @@ public abstract class TemplateTSP implements TSP {
     private Integer[] meilleureSolution;
     private int coutMeilleureSolution = 0;
     private Boolean tempsLimiteAtteint;
-    private int boundValue;
-
     private boolean disableBound=false;
 
 
