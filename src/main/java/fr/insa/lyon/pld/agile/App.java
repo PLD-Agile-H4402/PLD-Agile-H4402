@@ -1,5 +1,7 @@
 package fr.insa.lyon.pld.agile;
 
+import fr.insa.lyon.pld.agile.view.Window;
+
 public class App 
 {
     public static void main( String[] args )

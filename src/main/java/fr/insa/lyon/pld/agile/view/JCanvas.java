@@ -1,4 +1,4 @@
-package fr.insa.lyon.pld.agile;
+package fr.insa.lyon.pld.agile.view;
 
 import fr.insa.lyon.pld.agile.model.*;
 
@@ -18,7 +18,7 @@ class JCanvas extends JPanel implements MouseListener
     Map map;
     
     Double latitudesMin;
-    Double latitudesMax;	
+    Double latitudesMax;
     Double longitudesMin;
     Double longitudesMax;
     
@@ -38,59 +38,59 @@ class JCanvas extends JPanel implements MouseListener
 
     public void setmap(Map newmap)
     {
-    	map=newmap;
+        map=newmap;
 
-		if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
-    		return;
-    	}
+        if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
+            return;
+        }
 
-		List<Double> latitudes = new ArrayList<Double>();
-		List<Double> longitudes = new ArrayList<Double>();
-		for (Node n : map.getNodes().values()) {
-			latitudes.add(n.getLatitude());
-			longitudes.add(n.getLongitude());
-		}
-		
-		latitudesMin = Collections.min(latitudes);
-		latitudesMax = Collections.max(latitudes);	
-		longitudesMin = Collections.min(longitudes);
-		longitudesMax = Collections.max(longitudes);
-		
-    	this.repaint();
+        List<Double> latitudes = new ArrayList<Double>();
+        List<Double> longitudes = new ArrayList<Double>();
+        for (Node n : map.getNodes().values()) {
+            latitudes.add(n.getLatitude());
+            longitudes.add(n.getLongitude());
+        }
+        
+        latitudesMin = Collections.min(latitudes);
+        latitudesMax = Collections.max(latitudes);
+        longitudesMin = Collections.min(longitudes);
+        longitudesMax = Collections.max(longitudes);
+        
+        this.repaint();
     }
     
     @Override
     public void paintComponent(Graphics g)
     {
-		g.clearRect(0, 0, this.getWidth(), this.getHeight());
+        g.clearRect(0, 0, this.getWidth(), this.getHeight());
 
-		if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
-    		return;
-    	}
+        if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
+            return;
+        }
 
-		if (sel != null) {
-			int diameter = 15;
-			Point coordssel = getCoordsToPixel(sel.getLongitude(),sel.getLatitude());
-			g.drawOval((int) coordssel.getX()-diameter/2, (int) coordssel.getY()-diameter/2, diameter, diameter);
-		}
-		
-		ratioX = (longitudesMax - longitudesMin) / this.getWidth();
-		ratioY = (latitudesMax - latitudesMin) / this.getHeight();
-		ratio = (ratioX > ratioY ? ratioX : ratioY);
-		
-		deltaX = (this.getWidth() - (longitudesMax-longitudesMin)/ratio)/2;
-		deltaY = (this.getHeight() - (latitudesMax-latitudesMin)/ratio)/2;
-		
-		for (Node n : map.getNodes().values()) {
-			Point coordsn = getCoordsToPixel(n.getLongitude(), n.getLatitude());
-			
-			for (Section s : n.getOutgoingSections()) {
-				Node n2 = s.getDestination();
-				Point coordsn2 = getCoordsToPixel(n2.getLongitude(),n2.getLatitude());
-				
-				g.drawLine(coordsn.x, coordsn.y, coordsn2.x, coordsn2.y);
-			}
-		}
+        if (sel != null) {
+            int diameter = 15;
+            Point coordssel = getCoordsToPixel(sel.getLongitude(),sel.getLatitude());
+            g.drawOval((int) coordssel.getX()-diameter/2, (int) coordssel.getY()-diameter/2, diameter, diameter);
+        }
+        
+        ratioX = (longitudesMax - longitudesMin) / this.getWidth();
+        ratioY = (latitudesMax - latitudesMin) / this.getHeight();
+        ratio = (ratioX > ratioY ? ratioX : ratioY);
+        
+        deltaX = (this.getWidth() - (longitudesMax-longitudesMin)/ratio)/2;
+        deltaY = (this.getHeight() - (latitudesMax-latitudesMin)/ratio)/2;
+        
+        for (Node n : map.getNodes().values()) {
+            Point coordsn = getCoordsToPixel(n.getLongitude(), n.getLatitude());
+            
+            for (Section s : n.getOutgoingSections()) {
+                Node n2 = s.getDestination();
+                Point coordsn2 = getCoordsToPixel(n2.getLongitude(),n2.getLatitude());
+                
+                g.drawLine(coordsn.x, coordsn.y, coordsn2.x, coordsn2.y);
+            }
+        }
     }
 
     public Point getCoordsToPixel(double longitude, double latitude) {
