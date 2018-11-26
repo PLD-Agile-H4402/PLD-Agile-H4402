@@ -12,10 +12,10 @@ import java.util.StringJoiner;
  * @author scheah
  */
 public class Map {
-    private java.util.Map<Long, Node> nodes;
+    private final java.util.Map<Long, Node> nodes;
     private Node warehouse;
     private LocalTime startingHour;
-    private List<Delivery> deliveries;
+    private final List<Delivery> deliveries;
 
     public Map() {
         this.nodes = new HashMap();

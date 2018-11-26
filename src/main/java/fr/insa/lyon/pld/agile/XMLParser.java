@@ -63,12 +63,10 @@ public class XMLParser {
                     Node origin = map.getNodes().get(originId);
                     if (origin != null) {
                         Node destination = map.getNodes().get(destinationId);
-                        if (destination != null)
-                        {
+                        if (destination != null) {
                             Section section = new Section(name, length, destination);
                             origin.addOutgoingSection(section);
-                        }
-                        else
+                        } else
                             throw new RuntimeException("Destination node doesn't exist"); //TODO : Better error handling
                     }
                     else
@@ -78,8 +76,7 @@ public class XMLParser {
         }
     }
     
-    public static void main(String args[]) throws IOException, SAXException, ParserConfigurationException
-    {
+    public static void main(String args[]) throws IOException, SAXException, ParserConfigurationException {
         Path path = Paths.get("grandPlan.xml");
         
         Map map = XMLParser.loadMap(path);
