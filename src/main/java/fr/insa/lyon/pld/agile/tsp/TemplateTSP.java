@@ -9,6 +9,7 @@ public abstract class TemplateTSP implements TSP {
 	private int coutMeilleureSolution = 0;
 	private Boolean tempsLimiteAtteint;
 	private int boundValue;
+
 	private boolean disableBound=false;
 	
 	
@@ -27,7 +28,6 @@ public abstract class TemplateTSP implements TSP {
 			coutMeilleureSolution=0;
 			return;
 		}
-		
 		long tpStart = System.currentTimeMillis();
 		
 		coutMeilleureSolution = Integer.MAX_VALUE;
@@ -42,6 +42,9 @@ public abstract class TemplateTSP implements TSP {
 		vus.add(0); // le premier sommet visite est 0
 		branchAndBound(0, nonVus, vus, 0, cout, duree,
 				System.currentTimeMillis(), tpsLimite);
+    
+		long duration = System.currentTimeMillis()-tpStart;
+		System.out.println("durr="+duration);
 	}
 
 	public Integer getMeilleureSolution(int i) {
@@ -126,6 +129,7 @@ public abstract class TemplateTSP implements TSP {
 				coutMeilleureSolution = coutVus;
 			}
 		} else if ((disableBound && coutVus < coutMeilleureSolution) || (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution)) {
+
 			Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 			while (it.hasNext()) {
 				Integer prochainSommet = it.next();
