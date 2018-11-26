@@ -1,11 +1,11 @@
 package fr.insa.lyon.pld.agile;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import fr.insa.lyon.pld.agile.tsp.TSP;
 import fr.insa.lyon.pld.agile.tsp.TSP1;
 import java.util.Random;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
 
@@ -13,11 +13,10 @@ public class TSPTest {
     private static TSP tsp;
     private static TSP tsp1;
 
-    @Before
-    public static void beforeEachTest() {
+    @BeforeEach
+    public void beforeEachTest() {
         tsp = new TSP1();
         tsp1 = new TSP1();
-        System.err.println("Testing");
     }
 
     @Test
