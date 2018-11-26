@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  *
@@ -29,7 +30,7 @@ public class Map {
     }
 
     public java.util.Map<Long, Node> getNodes() {
-        return nodes;
+        return Collections.unmodifiableMap(nodes);
     }
 
     public Node getWarehouse() {
@@ -44,5 +45,18 @@ public class Map {
         return Collections.unmodifiableList(deliveries);
     }
     
-    
+    public boolean addNode(Node node) {
+        // putIfAbsent return null if the key was absent
+        return nodes.putIfAbsent(node.getId(), node) == null;
+    }
+
+    @Override
+    public String toString() {
+        StringJoiner joiner = new StringJoiner("\n");
+        for (Node node : getNodes().values()) {
+            joiner.add(node.toString());
+        }
+        
+        return joiner.toString();
+    }
 }
