@@ -13,32 +13,28 @@ public class TSP1 extends TemplateTSP {
     @Override
     protected int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
 	int value=0;
-
-	double som=0;
-	int minZero=Integer.MAX_VALUE;
+	
+	int som=Integer.MAX_VALUE;
 	for(int i=0;i<nonVus.size();++i){
-	    int min1=Integer.MAX_VALUE;
-	    int min2=Integer.MAX_VALUE;
+	    if(cout[sommetCourant][nonVus.get(i)]<som){
+		som=cout[sommetCourant][nonVus.get(i)];
+	    }
+	}
+	value+=som;
+	
+	for(int i=0;i<nonVus.size();++i){
+	    int min=cout[nonVus.get(i)][0];
 	    for(int j=0;j<nonVus.size();++j){
 		if(i!=j){
-		    if(cout[nonVus.get(i)][nonVus.get(j)]<min1){
-			min1=cout[nonVus.get(i)][nonVus.get(j)];
-		    }
-		    if(cout[nonVus.get(j)][nonVus.get(i)]<min2){
-			min2=cout[nonVus.get(j)][nonVus.get(i)];
+		    if(cout[nonVus.get(i)][nonVus.get(j)]<min){
+			min=cout[nonVus.get(i)][nonVus.get(j)];
 		    }
 		}
 	    }
-
-	    if(cout[nonVus.get(i)][0]<minZero){
-		minZero=cout[nonVus.get(i)][0];
-	    }
-
-	    som+=min1+min2;
-	    value+=duree[i];
+	    value+=duree[nonVus.get(i)];
+	    value+=min;
 	}
-	value+=Math.floor(som/2.0);
-	value+=minZero;
+	System.out.println(value);
 	return value;
     }
 }

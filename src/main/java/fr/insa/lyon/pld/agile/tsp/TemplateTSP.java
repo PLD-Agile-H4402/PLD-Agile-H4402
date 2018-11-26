@@ -40,9 +40,6 @@ public abstract class TemplateTSP implements TSP {
 	vus.add(0); // le premier sommet visite est 0
 	branchAndBound(0, nonVus, vus, 0, cout, duree,
 		System.currentTimeMillis(), tpsLimite);
-
-	long duration = System.currentTimeMillis()-tpStart;
-	System.out.println("durr="+duration);
     }
 
     public Integer getMeilleureSolution(int i) {
@@ -126,7 +123,7 @@ public abstract class TemplateTSP implements TSP {
 		vus.toArray(meilleureSolution);
 		coutMeilleureSolution = coutVus;
 	    }
-	} else if ((disableBound && coutVus < coutMeilleureSolution) || (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution)) {
+	} else if (disableBound || (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution)) {
 
 	    Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
 	    while (it.hasNext()) {
