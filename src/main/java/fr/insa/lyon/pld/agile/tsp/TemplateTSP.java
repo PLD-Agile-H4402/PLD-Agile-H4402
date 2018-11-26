@@ -42,7 +42,7 @@ public abstract class TemplateTSP implements TSP {
 		System.currentTimeMillis(), tpsLimite);
 	
 	long duration = System.currentTimeMillis()-tpStart;
-	System.out.println("durr="+duration);
+	//System.out.println("durr="+duration);
     }
 
     public Integer getMeilleureSolution(int i) {
