@@ -9,6 +9,10 @@ public class Delivery {
     private final int duration;
     private DeliveryMan deliveryMan;
 
+    public Delivery(Node node, int duration) {
+        this(node, duration, null);
+    }
+    
     public Delivery(Node node, int duration, DeliveryMan deliveryMan) {
         this.node = node;
         this.duration = duration;
@@ -31,5 +35,10 @@ public class Delivery {
         this.deliveryMan = deliveryMan;
     }
     
-    
+    public String toString() {
+        return "Delivery{address: " + (node != null ? node.getId() : "null")
+                + ", duration: " + duration
+                + ", deliveryMan: " + (deliveryMan != null ? deliveryMan.getId() : "null")
+                +"}";
+    }
 }
