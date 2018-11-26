@@ -1,6 +1,5 @@
 package fr.insa.lyon.pld.agile;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
@@ -23,7 +22,7 @@ public class AppTest
     /**
      * @return the suite of tests being tested
      */
-    public static Test suite()
+    public static TestSuite suite()
     {
         return new TestSuite( AppTest.class );
     }
