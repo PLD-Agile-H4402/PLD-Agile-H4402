@@ -13,20 +13,22 @@ import java.util.List;
  *
  * @author nmesnard
  */
-public class MapViewTextual extends JPanel implements MapView, MouseListener
+public class MapViewTextual extends JTabbedPane implements MapView
 {
-
+    Map map;
+    List<Delivery> deliveries;
+    
+    
+    
     public MapViewTextual()
     {
-        JTabbedPane tabbedPane = new JTabbedPane();
+        // this.addTab();
+        
         for (int count=0; count<3; count++) {
             String livreurName = "Livreur " + (count+1);
             JPanel panLivreur = makeListPanel(livreurName);
-            tabbedPane.addTab(livreurName, null, panLivreur, livreurName);
+            this.addTab(livreurName, panLivreur); //, null, panLivreur, livreurName);
         }
-        
-        this.setLayout(new GridLayout(1, 1));
-        this.add(tabbedPane);
     }
     
     protected static JPanel makeListPanel(String text) {
@@ -51,31 +53,4 @@ public class MapViewTextual extends JPanel implements MapView, MouseListener
         
     }
     
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    // ... other MouseListener methods ... //
-
 }

@@ -2,13 +2,15 @@ package fr.insa.lyon.pld.agile.view;
 
 import fr.insa.lyon.pld.agile.model.*;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -25,10 +27,12 @@ public class MapViewGraphical extends JPanel implements MapView
     Boolean hasSize = false;
     Boolean hasData = false;
     
-    Double latitudesMin;
-    Double latitudesMax;
-    Double longitudesMin;
-    Double longitudesMax;
+    Dimension preferred = null;
+    
+    Double latitudeMin;
+    Double latitudeMax;
+    Double longitudeMin;
+    Double longitudeMax;
     
     Double ratioX;
     Double ratioY;
@@ -67,19 +71,49 @@ public class MapViewGraphical extends JPanel implements MapView
         hasData = (map != null) && (map.getNodes() != null) && (!map.getNodes().isEmpty());
         
         if (hasData) {
+            
+            double totalDistance = 0.0;
+            long totalCount = 0L;
+            
             List<Double> latitudes = new ArrayList<>();
             List<Double> longitudes = new ArrayList<>();
             for (Node n : map.getNodes().values()) {
                 latitudes.add(n.getLatitude());
                 longitudes.add(n.getLongitude());
+                
+                for (Section s : n.getOutgoingSections()) {
+                    totalDistance += getNodesDistance(n, s.getDestination());
+                    totalCount++;
+                }
             }
-
-            latitudesMin = Collections.min(latitudes);
-            latitudesMax = Collections.max(latitudes);
-            longitudesMin = Collections.min(longitudes);
-            longitudesMax = Collections.max(longitudes);
+            
+            latitudeMin = Collections.min(latitudes);
+            latitudeMax = Collections.max(latitudes);
+            longitudeMin = Collections.min(longitudes);
+            longitudeMax = Collections.max(longitudes);
             
             eventResized();
+            
+            double avgDistance = totalDistance / totalCount;
+            double preferredDistance = 15.0;
+            
+            // avgDistance / ratio = 10;
+            // ratio / avgDistance = 1/10;
+            // ratio = avgDistance/10;
+            
+            // ratio = coteDiff / taille
+            // taille / coteDiff = 1 / ratio
+            // taille = coteDiff / ratio
+            
+            preferred = new Dimension(
+                (int) (preferredDistance * (longitudeMax - longitudeMin) / avgDistance),
+                (int) (preferredDistance * (latitudeMax - latitudeMin) / avgDistance)
+            );
+            
+        }
+        else
+        {
+            preferred = null;
         }
         
         this.repaint();
@@ -97,12 +131,12 @@ public class MapViewGraphical extends JPanel implements MapView
     {
         if (!hasData) return;
         
-        ratioX = (longitudesMax - longitudesMin) / this.getWidth();
-        ratioY = (latitudesMax - latitudesMin) / this.getHeight();
+        ratioX = (longitudeMax - longitudeMin) / this.getWidth();
+        ratioY = (latitudeMax - latitudeMin) / this.getHeight();
         ratio = (ratioX > ratioY ? ratioX : ratioY);
         
-        deltaX = (this.getWidth() - (longitudesMax-longitudesMin)/ratio)/2;
-        deltaY = (this.getHeight() - (latitudesMax-latitudesMin)/ratio)/2;
+        deltaX = (this.getWidth() - (longitudeMax-longitudeMin)/ratio)/2;
+        deltaY = (this.getHeight() - (latitudeMax-latitudeMin)/ratio)/2;
         
         hasSize = (ratio > 0);
     }
@@ -153,19 +187,34 @@ public class MapViewGraphical extends JPanel implements MapView
             }
         }
     }
-
+    
+    protected static double getNodesDistance(Node n1, Node n2) {
+        double distlong = n1.getLongitude() - n2.getLongitude();
+        double distlat = n1.getLatitude() - n2.getLatitude();
+        return Math.sqrt((distlong*distlong) + (distlat*distlat));
+    }
+    
     public Point getCoordsToPixel(double longitude, double latitude) {
         return new Point(
-            (int) ((longitude - longitudesMin) / ratio + deltaX),
-            (int) ((latitude - latitudesMin) / ratio + deltaY)
+            (int) ((longitude - longitudeMin) / ratio + deltaX),
+            (int) ((latitude - latitudeMin) / ratio + deltaY)
         );
     }
     
     public Point2D getPixelToPoint (double x, double y) {
         return new Point2D.Double(
-            (x - deltaX) * ratio + longitudesMin,
-            (y - deltaY) * ratio + latitudesMin
+            (x - deltaX) * ratio + longitudeMin,
+            (y - deltaY) * ratio + latitudeMin
         );
+    }
+    
+    @Override
+    public Dimension getPreferredSize() {
+        if (preferred != null) {
+            return preferred;
+        } else {
+            return super.getPreferredSize();
+        }
     }
     
 }

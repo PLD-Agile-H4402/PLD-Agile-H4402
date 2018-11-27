@@ -151,6 +151,7 @@ public class Window {
                             mv.setDeliveries(deliveries);
                             mv.setMap(map);
                         }
+                        frame.pack();
                         
                         stateRefresh();
                         
@@ -197,7 +198,7 @@ public class Window {
         
         
         // READY
-
+        
         frame.pack();
         frame.setVisible(true);
     }
