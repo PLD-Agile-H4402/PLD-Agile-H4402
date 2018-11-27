@@ -13,9 +13,14 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-class JCanvas extends JPanel implements MouseListener
+/**
+ *
+ * @author nmesnard, tzhang
+ */
+public class MapViewGraphical extends JPanel implements MapView, MouseListener
 {
     Map map;
+    List<Delivery> deliveries;
     
     Double latitudesMin;
     Double latitudesMax;
@@ -31,21 +36,22 @@ class JCanvas extends JPanel implements MouseListener
     
     Node sel = null;
     
-    public JCanvas()
+    public MapViewGraphical()
     {
         this.addMouseListener(this);
     }
 
-    public void setmap(Map newmap)
+    @Override
+    public void setMap(Map newMap)
     {
-        map=newmap;
+        map=newMap;
 
         if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
             return;
         }
 
-        List<Double> latitudes = new ArrayList<Double>();
-        List<Double> longitudes = new ArrayList<Double>();
+        List<Double> latitudes = new ArrayList<>();
+        List<Double> longitudes = new ArrayList<>();
         for (Node n : map.getNodes().values()) {
             latitudes.add(n.getLatitude());
             longitudes.add(n.getLongitude());
@@ -57,6 +63,12 @@ class JCanvas extends JPanel implements MouseListener
         longitudesMax = Collections.max(longitudes);
         
         this.repaint();
+    }
+    
+    @Override
+    public void setDeliveries(List<Delivery> newDeliveries)
+    {
+        
     }
     
     @Override
