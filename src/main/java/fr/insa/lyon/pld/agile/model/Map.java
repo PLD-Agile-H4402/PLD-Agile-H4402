@@ -1,11 +1,13 @@
 package fr.insa.lyon.pld.agile.model;
 
+import fr.insa.lyon.pld.agile.tsp.KMeansV1;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -82,9 +84,25 @@ public class Map {
             deliveryMen.add(new DeliveryMan(deliveryMen.size()));
     }
     
+    public void distributeDeliveries() {
+        List<Node> nodes = deliveries.stream().map(Delivery::getNode).collect(Collectors.toList());
+        List<Integer> clusters = KMeansV1.kMeans(nodes, deliveryMen.size());
+        for (int i = 0; i < clusters.size(); i++) {
+            assignDelivery(deliveries.get(i), deliveryMen.get(clusters.get(i)));
+        }
+    }
+    
     public void assignDelivery(Delivery delivery, DeliveryMan deliveryMan) {
         delivery.setDeliveryMan(deliveryMan);
         deliveryMan.addDelivery(delivery);
+    }
+    
+    public void clear() {
+        nodes.clear();
+        warehouse = null;
+        startingHour = null;
+        deliveries.clear();
+        deliveryMen.clear();
     }
     
     @Override

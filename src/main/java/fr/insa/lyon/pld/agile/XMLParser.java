@@ -27,7 +27,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLParser {
     private static final SAXParserFactory spf = SAXParserFactory.newInstance();
     
-    static public Map loadMap(Map map, Path path) throws IOException, SAXException, ParserConfigurationException {
+    static public Map loadNodes(Map map, Path path) throws IOException, SAXException, ParserConfigurationException {
         return loadMap(map, Files.newInputStream(path));
     }
     
@@ -134,7 +134,7 @@ public class XMLParser {
         Path deliveriesPath = Paths.get("dl-grand-12.xml");
         
         Map map = new Map();
-        XMLParser.loadMap(map, mapPath);
+        XMLParser.loadNodes(map, mapPath);
         XMLParser.loadDeliveries(map, deliveriesPath);
         System.out.println(map);
     }
