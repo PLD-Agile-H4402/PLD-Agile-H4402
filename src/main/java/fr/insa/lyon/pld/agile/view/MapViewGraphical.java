@@ -4,8 +4,7 @@ import fr.insa.lyon.pld.agile.model.*;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,10 +16,14 @@ import javax.swing.JPanel;
  *
  * @author nmesnard, tzhang
  */
-public class MapViewGraphical extends JPanel implements MapView, MouseListener
+
+public class MapViewGraphical extends JPanel implements MapView
 {
     Map map;
     List<Delivery> deliveries;
+    
+    Boolean hasSize = false;
+    Boolean hasData = false;
     
     Double latitudesMin;
     Double latitudesMax;
@@ -36,31 +39,48 @@ public class MapViewGraphical extends JPanel implements MapView, MouseListener
     
     Node sel = null;
     
+    private MouseListener mouseListener = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            eventClicked(e);
+        }
+    };
+    
+    private ComponentListener resizeListener = new ComponentAdapter() {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            eventResized();
+        }
+    };
+    
     public MapViewGraphical()
     {
-        this.addMouseListener(this);
+        this.addComponentListener(resizeListener);
+        this.addMouseListener(mouseListener);
     }
-
+    
     @Override
     public void setMap(Map newMap)
     {
-        map=newMap;
+        map = newMap;
 
-        if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
-            return;
-        }
-
-        List<Double> latitudes = new ArrayList<>();
-        List<Double> longitudes = new ArrayList<>();
-        for (Node n : map.getNodes().values()) {
-            latitudes.add(n.getLatitude());
-            longitudes.add(n.getLongitude());
-        }
+        hasData = (map != null) && (map.getNodes() != null) && (!map.getNodes().isEmpty());
         
-        latitudesMin = Collections.min(latitudes);
-        latitudesMax = Collections.max(latitudes);
-        longitudesMin = Collections.min(longitudes);
-        longitudesMax = Collections.max(longitudes);
+        if (hasData) {
+            List<Double> latitudes = new ArrayList<>();
+            List<Double> longitudes = new ArrayList<>();
+            for (Node n : map.getNodes().values()) {
+                latitudes.add(n.getLatitude());
+                longitudes.add(n.getLongitude());
+            }
+
+            latitudesMin = Collections.min(latitudes);
+            latitudesMax = Collections.max(latitudes);
+            longitudesMin = Collections.min(longitudes);
+            longitudesMax = Collections.max(longitudes);
+            
+            eventResized();
+        }
         
         this.repaint();
     }
@@ -68,23 +88,14 @@ public class MapViewGraphical extends JPanel implements MapView, MouseListener
     @Override
     public void setDeliveries(List<Delivery> newDeliveries)
     {
+        sel = null;
         
+        // TODO
     }
     
-    @Override
-    public void paintComponent(Graphics g)
+    public void eventResized()
     {
-        g.clearRect(0, 0, this.getWidth(), this.getHeight());
-
-        if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
-            return;
-        }
-
-        if (sel != null) {
-            int diameter = 15;
-            Point coordssel = getCoordsToPixel(sel.getLongitude(),sel.getLatitude());
-            g.drawOval((int) coordssel.getX()-diameter/2, (int) coordssel.getY()-diameter/2, diameter, diameter);
-        }
+        if (!hasData) return;
         
         ratioX = (longitudesMax - longitudesMin) / this.getWidth();
         ratioY = (latitudesMax - latitudesMin) / this.getHeight();
@@ -92,6 +103,44 @@ public class MapViewGraphical extends JPanel implements MapView, MouseListener
         
         deltaX = (this.getWidth() - (longitudesMax-longitudesMin)/ratio)/2;
         deltaY = (this.getHeight() - (latitudesMax-latitudesMin)/ratio)/2;
+        
+        hasSize = (ratio > 0);
+    }
+    
+    public void eventClicked(MouseEvent e)
+    {
+        if (!(hasData && hasSize)) return;
+        
+        Point2D coord = getPixelToPoint(e.getX(),e.getY());
+        
+        double closestdistance = -1;
+        Node closest = new Node(0, e.getX(), e.getY());
+        for (Node n : map.getNodes().values()) {
+            double distance = Math.pow((coord.getX() - n.getLongitude()), 2)
+                            + Math.pow((coord.getY() - n.getLatitude()), 2);
+            if (closestdistance < 0 || distance < closestdistance) {
+                closestdistance = distance;
+                closest = n;
+            }
+        }
+        
+        sel = closest;
+        
+        this.repaint();
+    }
+    
+    @Override
+    public void paintComponent(Graphics g)
+    {
+        g.clearRect(0, 0, this.getWidth(), this.getHeight());
+        
+        if (!(hasData && hasSize)) return;
+        
+        if (sel != null) {
+            int diameter = 15;
+            Point coordssel = getCoordsToPixel(sel.getLongitude(),sel.getLatitude());
+            g.drawOval((int) coordssel.getX()-diameter/2, (int) coordssel.getY()-diameter/2, diameter, diameter);
+        }
         
         for (Node n : map.getNodes().values()) {
             Point coordsn = getCoordsToPixel(n.getLongitude(), n.getLatitude());
@@ -119,50 +168,4 @@ public class MapViewGraphical extends JPanel implements MapView, MouseListener
         );
     }
     
-    @Override
-    public void mouseClicked(MouseEvent e)
-    {
-        Point2D coord = getPixelToPoint(e.getX(),e.getY());
-        
-        if ((map == null) || (map.getNodes() == null) || map.getNodes().isEmpty()) {
-            return;
-        }
-        
-        double closestdistance = -1;
-        Node closest = new Node(0, e.getX(), e.getY());
-        for (Node n : map.getNodes().values()) {
-            double distance = Math.pow((coord.getX() - n.getLongitude()), 2)
-                            + Math.pow((coord.getY() - n.getLatitude()), 2);
-            if (closestdistance < 0 || distance < closestdistance) {
-                closest = n;
-                closestdistance = distance;
-            }
-        }
-
-        sel = closest;
-
-        this.repaint();
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    // ... other MouseListener methods ... //
 }
