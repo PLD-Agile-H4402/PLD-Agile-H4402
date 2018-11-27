@@ -1,4 +1,4 @@
-package fr.insa.lyon.pld.agile.view;
+﻿package fr.insa.lyon.pld.agile.view;
 
 import fr.insa.lyon.pld.agile.model.Map;
 import fr.insa.lyon.pld.agile.XMLParser;
@@ -169,7 +169,7 @@ public class Window {
 
         String list[] = {"Monday", "Tuesday", "Wednesday",
                 "Thursday", "Friday", "Saturday", "Sunday"};
-        pan.add(new JList(list));
+        pan.add(new JList<>(list));
         return pan;
     }
 }
