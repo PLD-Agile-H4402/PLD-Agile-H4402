@@ -16,6 +16,7 @@ public class Map {
     private Node warehouse;
     private LocalTime startingHour;
     private final List<Delivery> deliveries;
+    private final List<DeliveryMan> deliveryMen;
 
     public Map() {
         this(null, null);
@@ -26,6 +27,7 @@ public class Map {
         this.warehouse = warehouse;
         this.startingHour = startingHour;
         this.deliveries = new ArrayList<>();
+        this.deliveryMen = new ArrayList<>();
     }
     
     public Node getNode(long id) {
@@ -46,6 +48,10 @@ public class Map {
 
     public List<Delivery> getDeliveries() {
         return Collections.unmodifiableList(deliveries);
+    }
+    
+    public List<DeliveryMan> getDeliveryMen() {
+        return Collections.unmodifiableList(deliveryMen);
     }
     
     public boolean addNode(Node node) {
@@ -69,6 +75,16 @@ public class Map {
     
     public void setStartingHour(LocalTime startingHour) {
         this.startingHour = startingHour;
+    }
+    
+    public void addDeliveryMan(int number) {
+        for (int i = 0; i < number; i++)
+            deliveryMen.add(new DeliveryMan(deliveryMen.size()));
+    }
+    
+    public void assignDelivery(Delivery delivery, DeliveryMan deliveryMan) {
+        delivery.setDeliveryMan(deliveryMan);
+        deliveryMan.addDelivery(delivery);
     }
     
     @Override
