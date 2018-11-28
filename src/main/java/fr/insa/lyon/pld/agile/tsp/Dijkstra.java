@@ -30,7 +30,7 @@ public class Dijkstra {
         }
     }
     
-    public static List dijkstra(Map<Long, Node> nodes, Node origin, Node destination){
+    public static List<Section> dijkstra(Map<Long, Node> nodes, Node origin, Node destination){
         int WHITE = 0;
         int GRAY = 1;
         int BLACK = 2;
@@ -86,6 +86,57 @@ public class Dijkstra {
         Collections.reverse(path);
         
         return path;
+    }
+    
+    public static double dijkstraLength(Map<Long, Node> nodes, Node origin, Node destination){
+        int WHITE = 0;
+        int GRAY = 1;
+        int BLACK = 2;
+        
+        Map<Long, NodeInfo> nodeInfos = new HashMap<>();
+        
+        for (Node node : nodes.values()) {
+            nodeInfos.put(node.getId(), new NodeInfo(node, WHITE, 100000000., -1, -1));
+        }
+        
+        LinkedList<NodeInfo> queue = new LinkedList();
+        queue.add(nodeInfos.get(origin.getId()));
+        nodeInfos.get(origin.getId()).dist = 0;
+        while(!queue.isEmpty()){
+            //TODO : PriorityQueue please
+            NodeInfo mini = queue.get(0);
+            for(int i=1; i<queue.size(); ++i){
+                if(mini.dist > queue.get(i).dist) {
+                    mini = queue.get(i);
+                }
+            }
+            
+            NodeInfo head = mini;
+            queue.remove(head);
+            
+            head.state = GRAY;
+            for(int i=0; i<head.node.getOutgoingSections().size(); ++i){
+                Section section = head.node.getOutgoingSections().get(i);
+                NodeInfo sectionDest = nodeInfos.get(section.getDestination().getId());
+                if(sectionDest.state != BLACK){
+                    if(sectionDest.state == WHITE){
+                        queue.add(sectionDest);
+                        sectionDest.state = GRAY;
+                    }
+                    if(sectionDest.dist > head.dist + section.getLength()){
+                        sectionDest.dist = head.dist + section.getLength();
+                        sectionDest.parent = head.node.getId();
+                        sectionDest.parentSection = i;
+                    }
+                }
+            }
+            
+            head.state = BLACK;
+        }
+
+        NodeInfo node = nodeInfos.get(destination.getId());
+        
+        return node.dist;
     }
     
     public static void test(){

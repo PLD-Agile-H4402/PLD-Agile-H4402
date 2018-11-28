@@ -62,7 +62,8 @@ public class MapViewTextual extends JTabbedPane implements MapView
                 vect.addElement("Point " + d.getNode().getId());
             }
             
-            newTab("Livreur " + deliveryMan.getId(), vect);
+            List<Passage> itinary = deliveryMan.getRound().getItinerary();
+            newTab("Livreur " + deliveryMan.getId() + " (" + (int)itinary.get(itinary.size()-1).getArrivalTime() + ")", vect);
         }
     }
     

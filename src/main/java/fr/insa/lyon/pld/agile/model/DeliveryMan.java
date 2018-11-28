@@ -54,4 +54,8 @@ public class DeliveryMan {
         deliveries.add(delivery);
     }
     
+    void clear() {
+        round.clear();
+        deliveries.clear();
+    }
 }

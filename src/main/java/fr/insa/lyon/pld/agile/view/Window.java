@@ -29,6 +29,7 @@ public class Window {
     
     JSpinner numDeliveries;
     JButton btnGenerate;
+    JButton btnOptimize;
     
     JButton btnListAdd;
     JButton btnListMove;
@@ -70,6 +71,7 @@ public class Window {
         ((DefaultEditor) numDeliveries.getEditor()).getTextField().setEditable(false);
         JLabel lblDeliveries = new JLabel("livreurs");
         btnGenerate = new JButton("Générer");
+        btnOptimize = new JButton("Optimiser");
         
         // > Main lists
         JPanel panLists = new JPanel();
@@ -95,6 +97,7 @@ public class Window {
         panDeliveries.add(numDeliveries);
         panDeliveries.add(lblDeliveries);
         panDeliveries.add(btnGenerate);
+        panDeliveries.add(btnOptimize);
         
         // - Main lists
         panLists.setBorder(spacer);
@@ -201,12 +204,29 @@ public class Window {
                 map.setDeliveryManCount(nbDeliveryMen);
                 System.out.println("Distribution des livraisons...");
                 map.distributeDeliveries();
-                System.out.println("Raccourcissement des livraisons...");
-                map.shortDeliveries();
                 
                 for (MapView mv : mapViews) {
                     mv.setDeliveries(map.getDeliveries()); //TODO : TO FIX !!!
                 }
+                
+                stateRefresh();
+            }
+        });
+        
+        btnOptimize.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Raccourcissement des livraisons...");
+                map.shortenDeliveries();
+                
+                int actualTab = mapViewTextual.getSelectedIndex();
+                for (MapView mv : mapViews) {
+                    mv.setDeliveries(map.getDeliveries()); //TODO : TO FIX !!!
+                }
+                
+                mapViewTextual.setSelectedIndex(actualTab);
+                
+                stateRefresh();
             }
         });
         
@@ -238,7 +258,8 @@ public class Window {
         btnOpenLoc.setEnabled(hasMap);
         
         numDeliveries.setEnabled(true);
-        btnGenerate.setEnabled(!map.getDeliveries().isEmpty());
+        btnGenerate.setEnabled(hasLoc);
+        btnOptimize.setEnabled(!map.getDeliveryMen().isEmpty());
         
         btnListAdd.setEnabled(hasLoc);
         btnListMove.setEnabled(hasLoc);

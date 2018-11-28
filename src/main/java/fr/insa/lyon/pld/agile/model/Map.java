@@ -1,5 +1,6 @@
 package fr.insa.lyon.pld.agile.model;
 
+import fr.insa.lyon.pld.agile.tsp.Dijkstra;
 import fr.insa.lyon.pld.agile.tsp.KMeansV1;
 import fr.insa.lyon.pld.agile.tsp.TSPSolver;
 import fr.insa.lyon.pld.agile.tsp.TSPSolverImplementation2;
@@ -96,11 +97,31 @@ public class Map {
         }
     }
     
-    public void shortDeliveries() {
+    public void shortenDeliveries() {
         for (DeliveryMan deliveryMan : deliveryMen) {
             TSPSolver tspSolver = new TSPSolverImplementation2();
-            //deliveryMan.getDeliveries().size()
-            //tspSolver.solve(10000, deliveryMan.getDeliveries().size(), edgesCosts, nodesCost);
+            List<Delivery> deliveries = deliveryMan.getDeliveries();
+            int[][] edgesCosts = new int[deliveries.size()][deliveries.size()];
+            int[] nodesCost = new int[deliveries.size()];
+            
+            for (int i = 0; i < deliveries.size(); i++) {
+                for (int j = 0; j < deliveries.size(); j++) {
+                    edgesCosts[i][j] = (int) (Dijkstra.dijkstraLength(nodes, deliveries.get(i).getNode(), deliveries.get(j).getNode())/1000./15.*60.*60.);
+                }
+                
+                nodesCost[i] = deliveries.get(i).getDuration();
+            }
+
+            tspSolver.solve(1000, deliveries.size(), edgesCosts, nodesCost);
+            
+            List<Delivery> best = new ArrayList<>();
+            for (int i = 0; i < deliveries.size(); i++) {
+                best.add(deliveries.get(tspSolver.getBestNode(i)));
+            }
+            
+            deliveryMan.clear();
+            for (Delivery d : best)
+                deliveryMan.addDelivery(d, this);
         }
     }
     
