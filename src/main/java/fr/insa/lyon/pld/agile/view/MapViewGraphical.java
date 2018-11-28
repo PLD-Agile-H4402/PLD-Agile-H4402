@@ -1,11 +1,14 @@
 package fr.insa.lyon.pld.agile.view;
 
+import fr.insa.lyon.pld.agile.controller.MainController;
 import fr.insa.lyon.pld.agile.model.*;
 
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,13 +41,25 @@ public class MapViewGraphical extends JPanel implements MapView
     Double deltaY;
     
     Node sel = null;
-    
-    private MouseListener mouseListener = new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            eventClicked(e);
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if ("deliveries".equals(propertyName)) {
+            setDeliveries((List<Delivery>)evt.getNewValue());
+        } else if ("map".equals(propertyName)) {
+            setMap((Map)evt.getNewValue());
         }
-    };
+    }
+    
+    private class MouseListener extends MouseAdapter{
+        private final MainController controller;
+        public MouseListener(MainController controller) {
+            this.controller = controller;
+        }
+    }
+    
+    private final MouseListener mouseListener;
     
     private ComponentListener resizeListener = new ComponentAdapter() {
         @Override
@@ -53,8 +68,14 @@ public class MapViewGraphical extends JPanel implements MapView
         }
     };
     
-    public MapViewGraphical()
+    public MapViewGraphical(MainController controller)
     {
+        this.mouseListener = new MouseListener(controller) {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                eventClicked(e, controller);
+            }
+        };
         this.addComponentListener(resizeListener);
         this.addMouseListener(mouseListener);
     }
@@ -107,24 +128,13 @@ public class MapViewGraphical extends JPanel implements MapView
         hasSize = (ratio > 0);
     }
     
-    public void eventClicked(MouseEvent e)
+    public void eventClicked(MouseEvent e, MainController controller)
     {
         if (!(hasData && hasSize)) return;
         
         Point2D coord = getPixelToPoint(e.getX(),e.getY());
         
-        double closestdistance = -1;
-        Node closest = new Node(0, e.getX(), e.getY());
-        for (Node n : map.getNodes().values()) {
-            double distance = Math.pow((coord.getX() - n.getLongitude()), 2)
-                            + Math.pow((coord.getY() - n.getLatitude()), 2);
-            if (closestdistance < 0 || distance < closestdistance) {
-                closestdistance = distance;
-                closest = n;
-            }
-        }
-        
-        sel = closest;
+        sel = controller.selectClosestDeliveryPoint(coord);
         
         this.repaint();
     }

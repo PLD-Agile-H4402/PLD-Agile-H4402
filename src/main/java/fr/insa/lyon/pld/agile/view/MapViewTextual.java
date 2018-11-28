@@ -5,6 +5,7 @@ import fr.insa.lyon.pld.agile.model.*;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 
 import java.util.List;
@@ -77,5 +78,15 @@ public class MapViewTextual extends JPanel implements MapView, MouseListener
     }
 
     // ... other MouseListener methods ... //
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if ("deliveries".equals(propertyName)) {
+            setDeliveries((List<Delivery>)evt.getNewValue());
+        } else if ("map".equals(propertyName)) {
+            setMap((Map)evt.getNewValue());
+        }
+    }
 
 }

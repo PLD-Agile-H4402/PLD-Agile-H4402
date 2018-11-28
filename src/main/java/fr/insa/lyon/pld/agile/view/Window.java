@@ -1,6 +1,7 @@
 package fr.insa.lyon.pld.agile.view;
 
 import fr.insa.lyon.pld.agile.XMLParser;
+import fr.insa.lyon.pld.agile.controller.MainController;
 import fr.insa.lyon.pld.agile.model.*;
 
 import javax.swing.*;
@@ -12,8 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -37,7 +43,25 @@ public class Window {
     
     List<MapView> mapViews = new ArrayList<>();
     
-    public Window(Map map) {
+    
+    private class ButtonListener implements ActionListener{
+        private final MainController controller;
+        public ButtonListener(MainController controller) {
+            this.controller = controller;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                controller.openMapFile(frame);
+                stateRefresh();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    public Window(Map map, MainController controller) {
         this.map = map;
         
         // CREATING COMPONENTS
@@ -56,8 +80,9 @@ public class Window {
         btnOpenLoc = new JButton(new ImageIcon("res/icons/pin.png"));
 
         // Centered map
-        MapViewGraphical mapViewGraphical = new MapViewGraphical();
+        MapViewGraphical mapViewGraphical = new MapViewGraphical(controller);
         mapViews.add(mapViewGraphical);
+        map.addPropertyChangeListener(mapViewGraphical);
         
         // Left panel
         JPanel panTools = new JPanel();
@@ -74,6 +99,7 @@ public class Window {
         JPanel panLists = new JPanel();
         MapViewTextual mapViewTextual = new MapViewTextual();
         mapViews.add(mapViewTextual);
+        map.addPropertyChangeListener(mapViewTextual);
         // > and their buttons
         btnListAdd = new JButton(new ImageIcon("res/icons/add.png"));
         btnListMove = new JButton(new ImageIcon("res/icons/move.png"));
@@ -131,64 +157,7 @@ public class Window {
         // EVENTS HANDLING
         
         // File opening
-        
-        btnOpenMap.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                // fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-                int result = fileChooser.showOpenDialog(frame);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                    try {
-                        map.clear();
-                        
-                        XMLParser.loadNodes(map, selectedFile.toPath());
-
-                        deliveries = null;
-                        for (MapView mv : mapViews) {
-                            mv.setDeliveries(deliveries);
-                            mv.setMap(map);
-                        }
-                        
-                        stateRefresh();
-                        
-                    } catch (Exception err) {
-                        // TODO Auto-generated catch block
-                        err.printStackTrace();
-                    }
-                } 
-            }
-        });
-        
-        btnOpenLoc.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                // fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-                int result = fileChooser.showOpenDialog(frame);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                    try {
-                        
-                        List<Delivery> newdeliveries = XMLParser.loadDeliveries(map, selectedFile.toPath());
-                        
-                        deliveries = newdeliveries;
-                        for (MapView mv : mapViews) {
-                            mv.setDeliveries(deliveries);
-                        }
-                        
-                        stateRefresh();
-                        
-                    } catch (Exception err) {
-                        // TODO Auto-generated catch block
-                        err.printStackTrace();
-                    }
-                } 
-            }
-        });
+        btnOpenLoc.addActionListener(new ButtonListener(controller));
 
         
         // INITIAL STATE
@@ -201,7 +170,7 @@ public class Window {
         frame.pack();
         frame.setVisible(true);
     }
-    
+
     protected void stateRefresh()
     {
         Boolean hasMap = (map != null);
