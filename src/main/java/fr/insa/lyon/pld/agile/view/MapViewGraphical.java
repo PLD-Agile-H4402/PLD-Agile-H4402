@@ -70,6 +70,8 @@ public class MapViewGraphical extends JPanel implements MapView
     {
         map = newMap;
         
+        deliveryManIndex = 0;
+        
         hasData = (map != null) && (map.getNodes() != null) && (!map.getNodes().isEmpty());
         
         if (hasData) {
@@ -97,12 +99,15 @@ public class MapViewGraphical extends JPanel implements MapView
     {
         sel = null;
         
+        deliveryManIndex = 0;
+        
         this.repaint();
     }
     
     public void showRound(int deliveryManIndex)
     {
         this.deliveryManIndex = deliveryManIndex;
+        
         this.repaint();
     }
     
@@ -175,20 +180,6 @@ public class MapViewGraphical extends JPanel implements MapView
             }
         }
         
-        for (Delivery d : map.getDeliveries()) {
-            Node n = d.getNode();
-            Point coordsd = getCoordsToPixel(n.getLongitude(), n.getLatitude());
-
-            drawNode(g, coordsd, 9);
-        }
-        
-        g.setColor(Color.blue);
-        
-        if (sel != null) {
-            Point coordssel = getCoordsToPixel(sel.getLongitude(), sel.getLatitude());
-            drawNode(g, coordssel, 9);
-        }
-        
         if (deliveryManIndex >= 0) {
             g.setColor(Color.blue);
             
@@ -203,6 +194,29 @@ public class MapViewGraphical extends JPanel implements MapView
                 
                 prev = cur;
             }
+            
+            g.setColor(Color.black);
+        }
+        
+        for (Delivery d : map.getDeliveries()) {
+            Node n = d.getNode();
+            Point coordsd = getCoordsToPixel(n.getLongitude(), n.getLatitude());
+
+            drawNode(g, coordsd, 9);
+        }
+        
+        Node wh = map.getWarehouse();
+        if (wh != null) {
+            Point coordwh = getCoordsToPixel(wh.getLongitude(), wh.getLatitude());
+            g.setColor(Color.red);
+            drawNode(g, coordwh, 9);
+        }
+        
+        g.setColor(Color.blue);
+        
+        if (sel != null) {
+            Point coordssel = getCoordsToPixel(sel.getLongitude(), sel.getLatitude());
+            drawNode(g, coordssel, 9);
         }
     }
     
