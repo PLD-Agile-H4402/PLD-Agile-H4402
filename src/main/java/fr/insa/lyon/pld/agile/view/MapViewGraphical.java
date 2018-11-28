@@ -119,10 +119,12 @@ public class MapViewGraphical extends JPanel implements MapView
         ratioY = (latitudeMax - latitudeMin) / height;
         ratio = (ratioX > ratioY ? ratioX : ratioY);
         
-        deltaX = (width - (longitudeMax - longitudeMin) / ratio) / 2;
-        deltaY = (height - (latitudeMax - latitudeMin) / ratio) / 2;
-        
-        hasScale = (ratio > 0);
+        if (ratio > 0) {
+            deltaX = (width - (longitudeMax - longitudeMin) / ratio) / 2;
+            deltaY = (height - (latitudeMax - latitudeMin) / ratio) / 2;
+
+            hasScale = true;
+        }
         
         this.repaint();
     }
@@ -188,8 +190,8 @@ public class MapViewGraphical extends JPanel implements MapView
         }
         
         if (deliveryManIndex >= 0) {
-            g.setColor(Color.green);
-
+            g.setColor(Color.blue);
+            
             Node prev = map.getWarehouse();
             for (Passage p : map.getDeliveryMen().get(deliveryManIndex).getRound().getItinerary()) {
                 Node cur = p.getSection().getDestination();
@@ -197,9 +199,17 @@ public class MapViewGraphical extends JPanel implements MapView
                 Point coordsn1 = getCoordsToPixel(prev.getLongitude(), prev.getLatitude());
                 Point coordsn2 = getCoordsToPixel(cur.getLongitude(),cur.getLatitude());
                
-                drawSection(g, coordsn1, coordsn2);
+                drawSectionThick(g, coordsn1, coordsn2);
                 
                 prev = cur;
+            }
+        }
+    }
+    
+    protected static void drawSectionThick(Graphics g, Point p1, Point p2) {
+        for (int dx=-1; dx<=1; dx++) {
+            for (int dy=-1; dy<=1; dy++) {
+                g.drawLine(p1.x+dx, p1.y+dy, p2.x+dx, p2.y+dy);
             }
         }
     }
