@@ -20,22 +20,7 @@ public class MainController {
 
     public MainController(Map map) {
         this.map = map;
-        view = new Window(map, this);
-    }
-    
-    public Node selectClosestDeliveryPoint(Point2D coord)
-    {
-        double closestdistance = -1;
-        Node closest = null;
-        for (Node n : map.getNodes().values()) {
-            double distance = Math.pow((coord.getX() - n.getLongitude()), 2)
-                            + Math.pow((coord.getY() - n.getLatitude()), 2);
-            if (closestdistance < 0 || distance < closestdistance) {
-                closestdistance = distance;
-                closest = n;
-            }
-        }
-        return closest;
+        this.view = new Window(map, this);
     }
 
     public void loadNodesFile() throws IOException, SAXException, ParserConfigurationException {
@@ -55,5 +40,9 @@ public class MainController {
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
             XMLParser.loadDeliveries(map, selectedFile.toPath());
         }
+    }
+    
+    public void showDeliveryManRound(int deliveryManIndex) {
+        view.showDeliveryManRound(deliveryManIndex);
     }
 }

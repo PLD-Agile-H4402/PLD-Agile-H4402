@@ -36,4 +36,5 @@ public abstract class MapView extends JPanel implements PropertyChangeListener{
     public abstract void updateStartingHour();
     public abstract void updateWarehouse();
     
+    public abstract void showDeliveryManRound(int deliveryManIndex);
 }

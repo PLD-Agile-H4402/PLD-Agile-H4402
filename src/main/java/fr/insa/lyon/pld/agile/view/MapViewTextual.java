@@ -1,87 +1,107 @@
 package fr.insa.lyon.pld.agile.view;
 
+import fr.insa.lyon.pld.agile.controller.MainController;
 import fr.insa.lyon.pld.agile.model.*;
+import java.awt.BorderLayout;
 
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 
 import java.util.List;
+import java.util.ArrayList;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author nmesnard
  */
-public class MapViewTextual extends MapView implements MouseListener
+public class MapViewTextual extends MapView
 {
     final Map map;
-    public MapViewTextual()
-    {
-        JTabbedPane tabbedPane = new JTabbedPane();
-        for (int count=0; count<3; count++) {
-            String livreurName = "Livreur " + (count+1);
-            JPanel panLivreur = makeListPanel(livreurName);
-            tabbedPane.addTab(livreurName, null, panLivreur, livreurName);
+    final MainController controller;
+    
+    private JTabbedPane jTabbedPane;
+    
+    private List<JList> lists = null;
+    
+    public MapViewTextual(Map map, MainController controller) {
+        this.map = map;
+        this.controller = controller;
+        this.jTabbedPane = new JTabbedPane();
+        setLayout(new BorderLayout());
+        add(jTabbedPane, BorderLayout.CENTER);
+        recreate();
+        
+        this.jTabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                controller.showDeliveryManRound(jTabbedPane.getSelectedIndex()-1);
+            }
+        });
+    }
+    
+    public int getActiveDeliveryManIndex() {
+        return jTabbedPane.getSelectedIndex()-1;
+    }
+    
+    @Override
+    public void showDeliveryManRound(int deliveryManIndex) {
+        jTabbedPane.setSelectedIndex(deliveryManIndex+1);
+    }
+    
+    protected void recreate() {
+        lists = new ArrayList<>();
+        
+        jTabbedPane.removeAll();
+        
+        DefaultListModel<String> locs = new DefaultListModel<>();
+        
+        for (Delivery d : map.getDeliveries()) {
+            locs.addElement("Point " + d.getNode().getId());
         }
         
-        this.setLayout(new GridLayout(1, 1));
-        this.add(tabbedPane);
-    }
-    
-    protected static JPanel makeListPanel(String text) {
-        JPanel pan = new JPanel();
-        pan.setLayout(new GridLayout(1, 1));
+        newTab("Tous", locs);
         
-        String list[] = {"Monday", "Tuesday", "Wednesday",
-                         "Thursday", "Friday", "Saturday", "Sunday"};
-        pan.add(new JList<>(list));
-        return pan;
+        for (DeliveryMan deliveryMan : map.getDeliveryMen())
+        {
+            DefaultListModel<String> vect = new DefaultListModel<>();
+            for (Delivery d : deliveryMan.getDeliveries()) {
+                vect.addElement("Point " + d.getNode().getId());
+            }
+
+            List<Passage> itinary = deliveryMan.getRound().getItinerary();
+            int arrivalTime = 0;
+            if (!itinary.isEmpty())
+                arrivalTime = (int)itinary.get(itinary.size()-1).getArrivalTime();
+            
+            newTab("n°" + deliveryMan.getId() + " (" + arrivalTime + ")", vect);
+        }
     }
     
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
+    protected void newTab(String tabName, DefaultListModel<String> tabList) {
+        JList<String> lstList = new JList<>(tabList);
+        lists.add(lstList);
+        
+        JPanel panLivreur = new JPanel();
+        panLivreur.setLayout(new GridLayout(1, 1));
+        panLivreur.add(lstList);
+        jTabbedPane.addTab(tabName, panLivreur); //, null, panLivreur, livreurName);
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
-
-    // ... other MouseListener methods ... //
-
-    @Override
-    public void updateNodes()
-    {
+    public void updateNodes() {
         
     }
     
     @Override
-    public void updateDeliveries()
-    {
-        
+    public void updateDeliveries() {
+        recreate();
     }
     
     @Override
     public void updateDeliveryMen() {
-        
+        recreate();
     }
 
     @Override
@@ -93,5 +113,4 @@ public class MapViewTextual extends MapView implements MouseListener
     public void updateWarehouse() {
         
     }
-
 }

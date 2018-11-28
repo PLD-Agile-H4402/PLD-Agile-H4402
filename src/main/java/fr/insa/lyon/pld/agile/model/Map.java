@@ -1,6 +1,9 @@
 package fr.insa.lyon.pld.agile.model;
 
+import fr.insa.lyon.pld.agile.tsp.Dijkstra;
 import fr.insa.lyon.pld.agile.tsp.KMeansV1;
+import fr.insa.lyon.pld.agile.tsp.TSPSolver;
+import fr.insa.lyon.pld.agile.tsp.TSPSolverImplementation2;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.time.LocalTime;
@@ -98,23 +101,64 @@ public class Map {
         this.pcs.firePropertyChange("startingHour", oldStartingHour, startingHour);
     }
     
-    public void addDeliveryMan(int number) {
+    public void setDeliveryManCount(int number) {
+        deliveryMen.clear();
         for (int i = 0; i < number; i++)
             deliveryMen.add(new DeliveryMan(deliveryMen.size()));
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
     public void distributeDeliveries() {
-        List<Node> nodes = deliveries.stream().map(Delivery::getNode).collect(Collectors.toList());
-        List<Integer> clusters = KMeansV1.kMeans(nodes, deliveryMen.size());
-        for (int i = 0; i < clusters.size(); i++) {
-            assignDelivery(deliveries.get(i), deliveryMen.get(clusters.get(i)));
+        List<Node> deliveryNodes = deliveries.stream().map(Delivery::getNode).collect(Collectors.toList());
+        int[] clusters = KMeansV1.kMeans(deliveryNodes, deliveryMen.size());
+        
+        for (int i = 0; i < clusters.length; i++) {
+            assignDelivery(deliveries.get(i), deliveryMen.get(clusters[i]));
         }
+
+        for (DeliveryMan deliveryMan : deliveryMen) {
+            deliveryMan.addNode(warehouse, this);
+        }
+        
+        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+    }
+    
+    public void shortenDeliveries() {
+        for (DeliveryMan deliveryMan : deliveryMen) {
+            TSPSolver tspSolver = new TSPSolverImplementation2();
+            List<Delivery> deliveries = deliveryMan.getDeliveries();
+            int[][] edgesCosts = new int[deliveries.size()][deliveries.size()];
+            int[] nodesCost = new int[deliveries.size()];
+            
+            for (int i = 0; i < deliveries.size(); i++) {
+                java.util.Map<Long, Double> distances = Dijkstra.getDistances(nodes, deliveries.get(i).getNode());
+                for (int j = 0; j < deliveries.size(); j++) {
+                    edgesCosts[i][j] = (int) (distances.get(deliveries.get(j).getNode().getId())/1000./15.*60.*60.);
+                }
+                
+                nodesCost[i] = deliveries.get(i).getDuration();
+            }
+
+            tspSolver.solve(1000, deliveries.size(), edgesCosts, nodesCost);
+            
+            List<Delivery> best = new ArrayList<>();
+            for (int i = 0; i < deliveries.size(); i++) {
+                best.add(deliveries.get(tspSolver.getBestNode(i)));
+            }
+            
+            deliveryMan.clear();
+            for (Delivery d : best)
+                deliveryMan.addDelivery(d, this);
+            
+            deliveryMan.addNode(warehouse, this);
+        }
+        
+        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
     public void assignDelivery(Delivery delivery, DeliveryMan deliveryMan) {
         delivery.setDeliveryMan(deliveryMan);
-        deliveryMan.addDelivery(delivery);
+        deliveryMan.addDelivery(delivery, this);
     }
     
     public void clear() {
@@ -124,7 +168,6 @@ public class Map {
         LocalTime oldStartingHour = startingHour;
         startingHour = null;
         deliveries.clear();
-        List<DeliveryMan> oldDeliveryMen = deliveryMen;
         deliveryMen.clear();
         this.pcs.firePropertyChange("nodes", null, nodes);
         this.pcs.firePropertyChange("warehouse", oldWarehouse, warehouse);
