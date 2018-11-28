@@ -23,7 +23,6 @@ import java.util.ArrayList;
 public class MapViewGraphical extends JPanel implements MapView
 {
     Map map;
-    List<Delivery> deliveries;
     
     Boolean hasScale = false;
     Boolean hasData = false;
@@ -96,8 +95,6 @@ public class MapViewGraphical extends JPanel implements MapView
     {
         sel = null;
         
-        deliveries = newDeliveries;
-        
         this.repaint();
     }
     
@@ -168,13 +165,11 @@ public class MapViewGraphical extends JPanel implements MapView
             }
         }
         
-        if (deliveries != null) {
-            for (Delivery d : deliveries) {
-                Node n = d.getNode();
-                Point coordsd = getCoordsToPixel(n.getLongitude(), n.getLatitude());
-                
-                drawNode(g, coordsd, 9);
-            }
+        for (Delivery d : map.getDeliveries()) {
+            Node n = d.getNode();
+            Point coordsd = getCoordsToPixel(n.getLongitude(), n.getLatitude());
+
+            drawNode(g, coordsd, 9);
         }
         
         g.setColor(Color.blue);

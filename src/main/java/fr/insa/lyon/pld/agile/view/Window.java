@@ -33,7 +33,6 @@ public class Window {
     JButton btnListRemove;
     
     Map map = null;
-    List<Delivery> deliveries = null;
     
     List<MapView> mapViews = new ArrayList<>();
     
@@ -146,9 +145,8 @@ public class Window {
                         
                         XMLParser.loadNodes(map, selectedFile.toPath());
 
-                        deliveries = null;
                         for (MapView mv : mapViews) {
-                            mv.setDeliveries(deliveries);
+                            mv.setDeliveries(map.getDeliveries());
                             mv.setMap(map);
                         }
                         frame.pack();
@@ -174,11 +172,10 @@ public class Window {
                     System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                     try {
                         
-                        List<Delivery> newdeliveries = XMLParser.loadDeliveries(map, selectedFile.toPath());
-                        
-                        deliveries = newdeliveries;
+                        XMLParser.loadDeliveries(map, selectedFile.toPath());
+
                         for (MapView mv : mapViews) {
-                            mv.setDeliveries(deliveries);
+                            mv.setDeliveries(map.getDeliveries());
                         }
                         
                         stateRefresh();
@@ -196,10 +193,18 @@ public class Window {
         btnGenerate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int nbDeliveryMen = numDeliveries.getValue();
+                int nbDeliveryMen = (int) numDeliveries.getValue();
                 
-                // TODO
-                System.out.print("Génération avec " + nbDeliveryMen + " livreurs.");
+                System.out.println("Génération avec " + nbDeliveryMen + " livreurs.");
+                map.setDeliveryManCount(nbDeliveryMen);
+                System.out.println("Distribution des livraisons...");
+                map.distributeDeliveries();
+                System.out.println("Raccourcissement des livraisons...");
+                map.shortDeliveries();
+                
+                for (MapView mv : mapViews) {
+                    mv.setDeliveries(map.getDeliveries()); //TODO : TO FIX !!!
+                }
             }
         });
         
@@ -218,13 +223,13 @@ public class Window {
     protected void stateRefresh()
     {
         Boolean hasMap = (map != null);
-        Boolean hasLoc = (deliveries != null);
+        Boolean hasLoc = (!map.getDeliveries().isEmpty());
         
         btnOpenMap.setEnabled(true);
         btnOpenLoc.setEnabled(hasMap);
         
         numDeliveries.setEnabled(true);
-        btnGenerate.setEnabled(hasLoc);
+        btnGenerate.setEnabled(!map.getDeliveries().isEmpty());
         
         btnListAdd.setEnabled(hasLoc);
         btnListMove.setEnabled(hasLoc);
