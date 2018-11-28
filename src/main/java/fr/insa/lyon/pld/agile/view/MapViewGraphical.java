@@ -7,8 +7,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,9 +18,9 @@ import javax.swing.JPanel;
  * @author nmesnard, tzhang
  */
 
-public class MapViewGraphical extends JPanel implements MapView
+public class MapViewGraphical extends MapView
 {
-    Map map;
+    final Map map;
     List<Delivery> deliveries;
     
     Boolean hasSize = false;
@@ -42,49 +40,11 @@ public class MapViewGraphical extends JPanel implements MapView
     
     Node sel = null;
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-        if ("deliveries".equals(propertyName)) {
-            setDeliveries((List<Delivery>)evt.getNewValue());
-        } else if ("map".equals(propertyName)) {
-            setMap((Map)evt.getNewValue());
-        }
-    }
-    
-    private class MouseListener extends MouseAdapter{
-        private final MainController controller;
-        public MouseListener(MainController controller) {
-            this.controller = controller;
-        }
-    }
-    
     private final MouseListener mouseListener;
     
-    private ComponentListener resizeListener = new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            eventResized();
-        }
-    };
-    
-    public MapViewGraphical(MainController controller)
-    {
-        this.mouseListener = new MouseListener(controller) {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                eventClicked(e, controller);
-            }
-        };
-        this.addComponentListener(resizeListener);
-        this.addMouseListener(mouseListener);
-    }
-    
     @Override
-    public void setMap(Map newMap)
+    public void updateNodes()
     {
-        map = newMap;
-
         hasData = (map != null) && (map.getNodes() != null) && (!map.getNodes().isEmpty());
         
         if (hasData) {
@@ -107,11 +67,50 @@ public class MapViewGraphical extends JPanel implements MapView
     }
     
     @Override
-    public void setDeliveries(List<Delivery> newDeliveries)
+    public void updateDeliveries()
     {
         sel = null;
         
         // TODO
+    }
+    
+    @Override
+    public void updateDeliveryMen() {
+    }
+
+    @Override
+    public void updateStartingHour() {
+    }
+
+    @Override
+    public void updateWarehouse() {
+    }
+    
+    private class MouseListener extends MouseAdapter{
+        private final MainController controller;
+        public MouseListener(MainController controller) {
+            this.controller = controller;
+        }
+    }
+    
+    private ComponentListener resizeListener = new ComponentAdapter() {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            eventResized();
+        }
+    };
+    
+    public MapViewGraphical(Map map,MainController controller)
+    {
+        this.map = map;
+        this.mouseListener = new MouseListener(controller) {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                eventClicked(e, controller);
+            }
+        };
+        this.addComponentListener(resizeListener);
+        this.addMouseListener(mouseListener);
     }
     
     public void eventResized()

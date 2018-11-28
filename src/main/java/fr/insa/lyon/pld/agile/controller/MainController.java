@@ -7,8 +7,6 @@ import fr.insa.lyon.pld.agile.view.Window;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
@@ -40,15 +38,22 @@ public class MainController {
         return closest;
     }
 
-    public void openMapFile(JFrame parent) throws IOException, SAXException, ParserConfigurationException {
-        JFileChooser fileChooser = new JFileChooser();
-        // fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        int result = fileChooser.showOpenDialog(parent);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
+    public void loadNodesFile() throws IOException, SAXException, ParserConfigurationException {
+        File selectedFile = view.askFile("Chargement d'un plan");
+        if (selectedFile != null)
+        {
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
             map.clear();
             XMLParser.loadNodes(map, selectedFile.toPath());
-        } 
+        }
+    }
+    
+    public void loadDeliveriesFile() throws IOException, SAXException, ParserConfigurationException {
+        File selectedFile = view.askFile("Chargement de demandes de livraison");
+        if (selectedFile != null)
+        {
+            System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            XMLParser.loadDeliveries(map, selectedFile.toPath());
+        }
     }
 }

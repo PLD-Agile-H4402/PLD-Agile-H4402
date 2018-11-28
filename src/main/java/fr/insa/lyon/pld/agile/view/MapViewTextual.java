@@ -14,9 +14,9 @@ import java.util.List;
  *
  * @author nmesnard
  */
-public class MapViewTextual extends JPanel implements MapView, MouseListener
+public class MapViewTextual extends MapView implements MouseListener
 {
-
+    final Map map;
     public MapViewTextual()
     {
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -38,18 +38,6 @@ public class MapViewTextual extends JPanel implements MapView, MouseListener
                          "Thursday", "Friday", "Saturday", "Sunday"};
         pan.add(new JList<>(list));
         return pan;
-    }
-    
-    @Override
-    public void setMap(Map newMap)
-    {
-        
-    }
-    
-    @Override
-    public void setDeliveries(List<Delivery> newDeliveries)
-    {
-        
     }
     
     @Override
@@ -80,13 +68,30 @@ public class MapViewTextual extends JPanel implements MapView, MouseListener
     // ... other MouseListener methods ... //
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-        if ("deliveries".equals(propertyName)) {
-            setDeliveries((List<Delivery>)evt.getNewValue());
-        } else if ("map".equals(propertyName)) {
-            setMap((Map)evt.getNewValue());
-        }
+    public void updateNodes()
+    {
+        
+    }
+    
+    @Override
+    public void updateDeliveries()
+    {
+        
+    }
+    
+    @Override
+    public void updateDeliveryMen() {
+        
+    }
+
+    @Override
+    public void updateStartingHour() {
+        
+    }
+
+    @Override
+    public void updateWarehouse() {
+        
     }
 
 }

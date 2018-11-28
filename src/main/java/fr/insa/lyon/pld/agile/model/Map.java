@@ -70,13 +70,14 @@ public class Map {
     
     public boolean addNode(Node node) {
         // putIfAbsent return null if the key was absent
-        return nodes.putIfAbsent(node.getId(), node) == null;
+        Node n = nodes.putIfAbsent(node.getId(), node);
+        this.pcs.firePropertyChange("nodes", null, nodes);
+        return n == null;
     }
 
     public void addDelivery(Delivery delivery) {
-        List<Delivery> oldDeliveries = deliveries;
         deliveries.add(delivery);
-        this.pcs.firePropertyChange("deliveries", oldDeliveries, deliveries);
+        this.pcs.firePropertyChange("deliveries", null, deliveries);
     }
     
     public boolean setWarehouse(long id) {
@@ -98,10 +99,9 @@ public class Map {
     }
     
     public void addDeliveryMan(int number) {
-        List<DeliveryMan> oldDeliveryMen = deliveryMen;
         for (int i = 0; i < number; i++)
             deliveryMen.add(new DeliveryMan(deliveryMen.size()));
-        this.pcs.firePropertyChange("deliveryMen", oldDeliveryMen, deliveryMen);
+        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
     public void distributeDeliveries() {
@@ -118,21 +118,19 @@ public class Map {
     }
     
     public void clear() {
-        java.util.Map<Long, Node> oldNodes = nodes;
         nodes.clear();
         Node oldWarehouse = warehouse;
         warehouse = null;
         LocalTime oldStartingHour = startingHour;
         startingHour = null;
-        List<Delivery> oldDeliveries = deliveries;
         deliveries.clear();
         List<DeliveryMan> oldDeliveryMen = deliveryMen;
         deliveryMen.clear();
-        this.pcs.firePropertyChange("nodes", oldNodes, nodes);
+        this.pcs.firePropertyChange("nodes", null, nodes);
         this.pcs.firePropertyChange("warehouse", oldWarehouse, warehouse);
         this.pcs.firePropertyChange("startingHour", oldStartingHour, startingHour);
-        this.pcs.firePropertyChange("deliveries", oldDeliveries, deliveries);
-        this.pcs.firePropertyChange("deliveryMen", oldDeliveryMen, deliveryMen);
+        this.pcs.firePropertyChange("deliveries", null, deliveries);
+        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
     @Override

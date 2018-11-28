@@ -1,18 +1,39 @@
 package fr.insa.lyon.pld.agile.view;
 
-import fr.insa.lyon.pld.agile.model.Delivery;
-import fr.insa.lyon.pld.agile.model.Map;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
+import javax.swing.JPanel;
 
 /**
  *
  * @author nmesnard
  */
-public interface MapView extends PropertyChangeListener{
+public abstract class MapView extends JPanel implements PropertyChangeListener{
     
-    public void setMap(Map newMap);
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if ("deliveries".equals(propertyName)) {
+            updateDeliveries();
+        } 
+        if ("nodes".equals(propertyName)) {
+            updateNodes();
+        }
+        if ("deliveryMen".equals(propertyName)) {
+            updateDeliveryMen();
+        }
+        if ("startingHour".equals(propertyName)) {
+            updateStartingHour();
+        }
+        if ("warehouse".equals(propertyName)) {
+            updateWarehouse();
+        }
+    }
     
-    public void setDeliveries(List<Delivery> newDeliveries);
+    public abstract void updateNodes();
+    public abstract void updateDeliveries();
+    public abstract void updateDeliveryMen();
+    public abstract void updateStartingHour();
+    public abstract void updateWarehouse();
     
 }

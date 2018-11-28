@@ -1,6 +1,5 @@
 package fr.insa.lyon.pld.agile.view;
 
-import fr.insa.lyon.pld.agile.XMLParser;
 import fr.insa.lyon.pld.agile.controller.MainController;
 import fr.insa.lyon.pld.agile.model.*;
 
@@ -13,13 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -52,11 +46,25 @@ public class Window {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            try {
-                controller.openMapFile(frame);
-                stateRefresh();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            if (e.getSource() == btnOpenMap)
+            {
+                try 
+                {
+                    controller.loadNodesFile();
+                    stateRefresh();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else if (e.getSource() == btnOpenLoc)
+            {
+                try 
+                {
+                    controller.loadDeliveriesFile();
+                    stateRefresh();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
@@ -80,7 +88,7 @@ public class Window {
         btnOpenLoc = new JButton(new ImageIcon("res/icons/pin.png"));
 
         // Centered map
-        MapViewGraphical mapViewGraphical = new MapViewGraphical(controller);
+        MapViewGraphical mapViewGraphical = new MapViewGraphical(map, controller);
         mapViews.add(mapViewGraphical);
         map.addPropertyChangeListener(mapViewGraphical);
         
@@ -157,9 +165,10 @@ public class Window {
         // EVENTS HANDLING
         
         // File opening
-        btnOpenLoc.addActionListener(new ButtonListener(controller));
+        ButtonListener btnListener = new ButtonListener(controller);
+        btnOpenMap.addActionListener(btnListener);
+        btnOpenLoc.addActionListener(btnListener);
 
-        
         // INITIAL STATE
         
         stateRefresh();
@@ -187,4 +196,15 @@ public class Window {
         btnListRemove.setEnabled(hasLoc);
     }
     
+    public File askFile(String title){
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle(title);
+        // fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showOpenDialog(frame);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            return selectedFile;
+        }
+        return null;
+    }
 }
