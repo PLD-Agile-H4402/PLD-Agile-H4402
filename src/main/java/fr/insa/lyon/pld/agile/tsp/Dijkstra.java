@@ -100,19 +100,15 @@ public class Dijkstra {
     
     public static Map<Long, Double> getDistances(Map<Long, Node> nodes, Node origin){
         Map<Long, NodeInfo> nodeInfos = dijkstra(nodes, origin);
-        
         Map<Long, Double> distances = new HashMap<>();
         
-        Iterator it = nodeInfos.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+        for(Map.Entry<Long, NodeInfo> pair : nodeInfos.entrySet()){
             distances.put((Long)pair.getKey(), ((NodeInfo)pair.getValue()).dist );
         }
         
         return distances;
     }
     
-
     public static void test(){
         Map<Long, Node> nodes = new HashMap();
         Node n0 = new Node(0,1,1);
