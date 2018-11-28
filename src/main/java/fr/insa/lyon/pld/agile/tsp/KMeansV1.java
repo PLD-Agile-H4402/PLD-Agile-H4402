@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class KMeansV1 {
     
     public static List<Node> generateNodes(int nodesNb, int spaceHeight, int spaceWidth) {
-        List<Node> nodes = new ArrayList();
+        List<Node> nodes = new ArrayList<>();
         for(int i=0; i<nodesNb; ++i) {
             double lon = ( (Math.random()-0.5) * spaceWidth ) ;
             double lat = ( (Math.random()-0.5) * spaceHeight ) ;
