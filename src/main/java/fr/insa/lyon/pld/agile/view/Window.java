@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -63,7 +65,7 @@ public class Window {
         
         // > Top settings
         JPanel panDeliveries = new JPanel();
-        SpinnerModel model = new SpinnerNumberModel(3, 1, 6, 1);
+        SpinnerModel model = new SpinnerNumberModel(3, 1, 12, 1);
         numDeliveries = new JSpinner(model);
         ((DefaultEditor) numDeliveries.getEditor()).getTextField().setEditable(false);
         JLabel lblDeliveries = new JLabel("livreurs");
@@ -205,6 +207,13 @@ public class Window {
                 for (MapView mv : mapViews) {
                     mv.setDeliveries(map.getDeliveries()); //TODO : TO FIX !!!
                 }
+            }
+        });
+        
+        mapViewTextual.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                mapViewGraphical.showRound(mapViewTextual.getSelectedIndex()-1);
             }
         });
         

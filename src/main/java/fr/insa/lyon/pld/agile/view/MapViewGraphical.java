@@ -43,6 +43,8 @@ public class MapViewGraphical extends JPanel implements MapView
     
     Node sel = null;
     
+    int deliveryManIndex = -1;
+    
     private MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -95,6 +97,12 @@ public class MapViewGraphical extends JPanel implements MapView
     {
         sel = null;
         
+        this.repaint();
+    }
+    
+    public void showRound(int deliveryManIndex)
+    {
+        this.deliveryManIndex = deliveryManIndex;
         this.repaint();
     }
     
@@ -179,6 +187,21 @@ public class MapViewGraphical extends JPanel implements MapView
             drawNode(g, coordssel, 9);
         }
         
+        if (deliveryManIndex >= 0) {
+            g.setColor(Color.green);
+
+            Node prev = map.getWarehouse();
+            for (Passage p : map.getDeliveryMen().get(deliveryManIndex).getRound().getItinerary()) {
+                Node cur = p.getSection().getDestination();
+                
+                Point coordsn1 = getCoordsToPixel(prev.getLongitude(), prev.getLatitude());
+                Point coordsn2 = getCoordsToPixel(cur.getLongitude(),cur.getLatitude());
+               
+                drawSection(g, coordsn1, coordsn2);
+                
+                prev = cur;
+            }
+        }
     }
     
     protected static void drawSection(Graphics g, Point p1, Point p2) {
