@@ -82,7 +82,7 @@ public class MapViewTextual extends MapView
             selNode = node;
             
             int deliveryManTab = panTabs.getSelectedIndex()-1;
-            int deliveryManNode = map.getNodeDeliveryMan(node);
+            int deliveryManNode = map.getNodeDeliveryManIndex(node);
             
             if (deliveryManNode >= 0 && deliveryManTab >= 0) {
                 if (deliveryManNode != deliveryManTab) {

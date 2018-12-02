@@ -160,6 +160,8 @@ public class Map {
     public void assignDelivery(Delivery delivery, DeliveryMan deliveryMan) {
         delivery.setDeliveryMan(deliveryMan);
         deliveryMan.addDelivery(delivery, this);
+        
+        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
     public void clear() {
@@ -177,6 +179,10 @@ public class Map {
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     public void clearDeliveries() {
+        for (DeliveryMan deliveryMan : deliveryMen)
+            deliveryMan.clear();
+        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+        
         deliveries.clear();
         this.pcs.firePropertyChange("deliveries", null, deliveries);
     }
@@ -210,19 +216,15 @@ public class Map {
         return builder.toString();
     }
     
-    public int getNodeDeliveryMan(Node node) {
-        int index = 0;
-        
+    public int getNodeDeliveryManIndex(Node node) {
         if (node != getWarehouse()) {
             for (Delivery d : getDeliveries()) {
                 if (d.getNode() == node) {
-                    for (DeliveryMan journey : getDeliveryMen()) {
-                        for (Passage p : journey.getRound().getItinerary()) {
-                            Node n = p.getSection().getDestination();
-                            if (node == n) return index;
-                        }
-                        index++;
-                    }
+                    DeliveryMan deliveryMan = d.getDeliveryMan();
+                    if (deliveryMan != null)
+                        return d.getDeliveryMan().getId();
+                    else
+                        return -1;
                 }
             }
         }
