@@ -169,7 +169,7 @@ public class MapViewTextual extends MapView
             
             if (indexMan == 0) {
                 indexNode = 0;
-                for (Delivery d : map.getDeliveries()) {
+                for (Delivery d : map.getDeliveries().values()) {
                     indexNode++;
                     itemsAll.addElement(new ListItem(d.getNode(), "Point " + indexNode));
                 }
