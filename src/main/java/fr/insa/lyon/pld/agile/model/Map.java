@@ -179,8 +179,9 @@ public class Map {
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     public void clearDeliveries() {
-        for (DeliveryMan deliveryMan : deliveryMen)
+        for (DeliveryMan deliveryMan : deliveryMen) {
             deliveryMan.clear();
+        }
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
         
         deliveries.clear();
