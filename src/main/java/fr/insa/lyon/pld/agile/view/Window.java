@@ -5,6 +5,7 @@ import fr.insa.lyon.pld.agile.model.*;
 
 import javax.swing.*;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
@@ -40,7 +41,7 @@ public class Window
     
     List<MapView> mapViews = new ArrayList<>();
     
-    public Window(Map map, MainController controller) {
+    public Window(Map map, final MainController controller) {
         this.map = map;
         this.controller = controller;
         
@@ -51,6 +52,17 @@ public class Window
         frame.setTitle("PLD Livraison à Domicile");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        frame.setSize(200,200); //initialize status bar
+        
+        //current status
+        JPanel statusBar = new JPanel ();
+        statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        statusBar.setPreferredSize(new Dimension(frame.getWidth(), 16));
+        statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
+        JLabel statusLabel = new JLabel("Current status");
+        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        statusBar.add(statusLabel);
+        frame.setVisible(true);
         
         // Top tool-bar
         JToolBar tlbTop = new JToolBar();
@@ -150,7 +162,10 @@ public class Window
         panTools.add(panLists, BorderLayout.CENTER);
         
         // Window
-        JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, mapViewGraphical);
+        JPanel panel = new JPanel (new BorderLayout());
+        panel.add(statusBar, BorderLayout.SOUTH);
+        panel.add(mapViewGraphical,BorderLayout.CENTER);
+        JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, panel);
         frame.add(tlbTop, BorderLayout.NORTH);
         frame.add(panSplit, BorderLayout.CENTER);
         
@@ -255,5 +270,6 @@ public class Window
             view.selectDeliveryMan(deliveryManIndex);
         }
     }
+   
     
 }

@@ -6,6 +6,7 @@ import fr.insa.lyon.pld.agile.model.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
@@ -203,9 +204,14 @@ public class MapViewGraphical extends MapView
     }
     
     @Override
-    public void paintComponent(Graphics g)
+    public void paintComponent(Graphics g0)
     {
-        g.clearRect(0, 0, this.getWidth(), this.getHeight());
+        super.paintComponent(g0);
+        final Graphics2D g = (Graphics2D) g0.create();
+        
+        try {
+        
+    	g.clearRect(0, 0, this.getWidth(), this.getHeight());
         
         if (!(hasData && hasScale)) return;
         
@@ -263,6 +269,11 @@ public class MapViewGraphical extends MapView
             Point coords = getCoordsToPixel(selNode);
             Color color = getNodeColor(selNode, Color.gray);
             Drawing.drawSelectedNode(g, coords, color);
+        }
+        
+        } 
+        finally {
+        	g.dispose();
         }
     }
     
