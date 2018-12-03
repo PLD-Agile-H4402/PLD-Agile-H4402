@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.GridBagConstraints;
 
 import javax.swing.*;
@@ -136,6 +138,8 @@ public class MapViewTextual extends MapView
         int indexMan;
         int indexNode;
         
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        
         if (map != null) {
             indexMan = 0;
             for (DeliveryMan deliveryMan : map.getDeliveryMen())
@@ -143,11 +147,23 @@ public class MapViewTextual extends MapView
                 indexMan++;
                 
                 indexNode = 0;
-                for (Delivery d : deliveryMan.getDeliveries()) {
+                
+                for (Passage p : deliveryMan.getRound().getItinerary()) {
+                    for (Delivery d : deliveryMan.getDeliveries()) {
+                	if(d.getNode().equals(p.getSection().getDestination())) {
+                	    indexNode++;
+                	    LocalTime lt = map.getStartingHour().plusSeconds((long) p.getArrivalTime());
+                	    itemsAll.addElement(new ListItem(d.getNode(), lt.format(dtf)+ " - " + p.getSection().getName()));
+                	}
+                    }
+                   
+                }
+                
+                /*for (Delivery d : deliveryMan.getDeliveries()) {
                     indexNode++;
                     
                     itemsAll.addElement(new ListItem(d.getNode(), "Point L" + indexMan + "." + indexNode));
-                }
+                }*/
             }
             
             if (indexMan == 0) {
@@ -170,14 +186,31 @@ public class MapViewTextual extends MapView
                 
                 indexNode = 0;
                 DefaultListModel<ListItem> items = new DefaultListModel<>();
-                for (Delivery d : deliveryMan.getDeliveries()) {
-                    indexNode++;
-                    
-                    items.addElement(new ListItem(d.getNode(), "Point " + indexNode));
+                //deliveryMan.getRound().getItinerary()
+                
+                for (Passage p : deliveryMan.getRound().getItinerary()) {
+                    for (Delivery d : deliveryMan.getDeliveries()) {
+                	if(d.getNode().equals(p.getSection().getDestination())) {
+                	    indexNode++;
+                	    LocalTime lt = map.getStartingHour().plusSeconds((long) p.getArrivalTime());
+                            items.addElement(new ListItem(d.getNode(), lt.format(dtf)+ " - " + p.getSection().getName()));
+                	}
+                    }
+                   
                 }
                 
+                /*for (Delivery d : deliveryMan.getDeliveries()) {
+                    indexNode++;
+                    items.addElement(new ListItem(d.getNode(), "Point " + indexNode));
+                }*/
+                
                 List<Passage> itinary = deliveryMan.getRound().getItinerary();
-                String info = (itinary.isEmpty() ? "Itinéraire vide !" : "Arrivée : " + (int) itinary.get(itinary.size()-1).getArrivalTime());
+                String info = "Itinéraire vide !";
+                if(!itinary.isEmpty()) {
+                    LocalTime lt = map.getStartingHour().plusSeconds((long) itinary.get(itinary.size()-1).getArrivalTime());
+                    info = "Arrivée : " + lt.format(dtf);
+                }
+                
                 
                 newTab("L" + indexMan, items, info);
             }
