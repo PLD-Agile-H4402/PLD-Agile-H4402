@@ -210,70 +210,68 @@ public class MapViewGraphical extends MapView
         final Graphics2D g = (Graphics2D) g0.create();
         
         try {
-        
-    	g.clearRect(0, 0, this.getWidth(), this.getHeight());
-        
-        if (!(hasData && hasScale)) return;
-        
-
-        g.setColor(Color.gray);
-        for (Node n1 : map.getNodes().values()) {
-            Point coordsn1 = getCoordsToPixel(n1);
             
-            for (Section s : n1.getOutgoingSections()) {
-                Node n2 = s.getDestination();
-                Point coordsn2 = getCoordsToPixel(n2);
-                
-                Drawing.drawLine(g, coordsn1, coordsn2);
-            }
-        }
-        
-        List<DeliveryMan> deliveryMen = map.getDeliveryMen();
-        if (!deliveryMen.isEmpty()) {
-            int indexMan = 0;
-            for (DeliveryMan deliveryMan : deliveryMen) {
-                g.setColor(Drawing.getColor(indexMan, deliveryMen.size()));
-                
-                Node n1 = map.getWarehouse();
+            g.clearRect(0, 0, this.getWidth(), this.getHeight());
+
+            if (!(hasData && hasScale)) return;
+
+            g.setColor(Color.gray);
+            for (Node n1 : map.getNodes().values()) {
                 Point coordsn1 = getCoordsToPixel(n1);
-                
-                if (selDeliveryMan < 0 || selDeliveryMan == indexMan) {
-                    float position = 0f;
-                    for (Passage p : deliveryMan.getRound().getItinerary()) {
-                        Node n2 = p.getSection().getDestination();
-                        Point coordsn2 = getCoordsToPixel(n2);
-                        
-                        Drawing.drawLineThick(g, coordsn1, coordsn2);
-                        if (isDirection) position = Drawing.drawLineArrows(g, coordsn1, coordsn2, position);
-                        
-                        coordsn1 = coordsn2;
-                    }
+
+                for (Section s : n1.getOutgoingSections()) {
+                    Node n2 = s.getDestination();
+                    Point coordsn2 = getCoordsToPixel(n2);
+
+                    Drawing.drawLine(g, coordsn1, coordsn2);
                 }
-                indexMan++;
             }
-        }
-        
-        for (Delivery d : map.getDeliveries()) {
-            Node n = d.getNode();
-            Point coords = getCoordsToPixel(d.getNode());
-            Color color = getNodeColor(n, Color.gray);
-            Drawing.drawDelivery(g, coords, color);
-        }
-        
-        Node wh = map.getWarehouse();
-        if (wh != null) {
-            Drawing.drawWarehouse(g, getCoordsToPixel(wh));
-        }
-        
-        if (selNode != null) {
-            Point coords = getCoordsToPixel(selNode);
-            Color color = getNodeColor(selNode, Color.gray);
-            Drawing.drawSelectedNode(g, coords, color);
-        }
-        
-        } 
-        finally {
-        	g.dispose();
+
+            List<DeliveryMan> deliveryMen = map.getDeliveryMen();
+            if (!deliveryMen.isEmpty()) {
+                int indexMan = 0;
+                for (DeliveryMan deliveryMan : deliveryMen) {
+                    g.setColor(Drawing.getColor(indexMan, deliveryMen.size()));
+
+                    Node n1 = map.getWarehouse();
+                    Point coordsn1 = getCoordsToPixel(n1);
+
+                    if (selDeliveryMan < 0 || selDeliveryMan == indexMan) {
+                        float position = 0f;
+                        for (Passage p : deliveryMan.getRound().getItinerary()) {
+                            Node n2 = p.getSection().getDestination();
+                            Point coordsn2 = getCoordsToPixel(n2);
+
+                            Drawing.drawLineThick(g, coordsn1, coordsn2);
+                            if (isDirection) position = Drawing.drawLineArrows(g, coordsn1, coordsn2, position);
+
+                            coordsn1 = coordsn2;
+                        }
+                    }
+                    indexMan++;
+                }
+            }
+
+            for (Delivery d : map.getDeliveries()) {
+                Node n = d.getNode();
+                Point coords = getCoordsToPixel(d.getNode());
+                Color color = getNodeColor(n, Color.gray);
+                Drawing.drawDelivery(g, coords, color);
+            }
+
+            Node wh = map.getWarehouse();
+            if (wh != null) {
+                Drawing.drawWarehouse(g, getCoordsToPixel(wh));
+            }
+
+            if (selNode != null) {
+                Point coords = getCoordsToPixel(selNode);
+                Color color = getNodeColor(selNode, Color.gray);
+                Drawing.drawSelectedNode(g, coords, color);
+            }
+            
+        } finally {
+            g.dispose();
         }
     }
     

@@ -4,7 +4,6 @@ import fr.insa.lyon.pld.agile.controller.MainController;
 import fr.insa.lyon.pld.agile.model.*;
 
 import javax.swing.*;
-import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -54,15 +53,14 @@ public class Window
         frame.setLayout(new BorderLayout());
         frame.setSize(200,200); //initialize status bar
         
-        //current status
-        JPanel statusBar = new JPanel ();
+        // Bottom status bar
+        JPanel statusBar = new JPanel();
         statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
         statusBar.setPreferredSize(new Dimension(frame.getWidth(), 16));
         statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
         JLabel statusLabel = new JLabel("Current status");
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusBar.add(statusLabel);
-        frame.setVisible(true);
         
         // Top tool-bar
         JToolBar tlbTop = new JToolBar();
@@ -92,7 +90,7 @@ public class Window
         JPanel panDeliveries = new JPanel();
         SpinnerModel model = new SpinnerNumberModel(3, 1, 12, 1);
         numDeliveries = new JSpinner(model);
-        ((DefaultEditor) numDeliveries.getEditor()).getTextField().setEditable(false);
+        // ((JSpinner.DefaultEditor) numDeliveries.getEditor()).getTextField().setEditable(false);
         JLabel lblDeliveries = new JLabel("livreurs");
         btnGenerate = new JButton("Générer");
         
@@ -162,10 +160,10 @@ public class Window
         panTools.add(panLists, BorderLayout.CENTER);
         
         // Window
-        JPanel panel = new JPanel (new BorderLayout());
-        panel.add(statusBar, BorderLayout.SOUTH);
-        panel.add(mapViewGraphical,BorderLayout.CENTER);
-        JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, panel);
+        JPanel panMain = new JPanel (new BorderLayout());
+        panMain.add(statusBar, BorderLayout.SOUTH);
+        panMain.add(mapViewGraphical,BorderLayout.CENTER);
+        JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, panMain);
         frame.add(tlbTop, BorderLayout.NORTH);
         frame.add(panSplit, BorderLayout.CENTER);
         
@@ -179,7 +177,7 @@ public class Window
                 controller.loadNodesFile();
                 stateRefresh();
             } catch (Exception ex) {
-                // ex.printStackTrace();
+                ex.printStackTrace();
             }
         });
         
@@ -188,7 +186,7 @@ public class Window
                 controller.loadDeliveriesFile();
                 stateRefresh();
             } catch (Exception ex) {
-                // ex.printStackTrace();
+                ex.printStackTrace();
             }
         });
         

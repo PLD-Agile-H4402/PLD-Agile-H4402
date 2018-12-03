@@ -6,6 +6,7 @@ import fr.insa.lyon.pld.agile.model.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridBagLayout;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -261,7 +262,9 @@ public class MapViewTextual extends MapView
             panTabs.setBackgroundAt(tabIndex, tabColor);
             lblInfos.setBackground(tabColor);
             lblInfos.setOpaque(true);
-        }
+        } // else {
+            lstList.setCellRenderer( new ListItemRenderer() );
+        // }
     }
     
     public class ListItem
@@ -282,6 +285,23 @@ public class MapViewTextual extends MapView
         public Node getNode() {
             return node;
         }
+    }
+    
+    private class ListItemRenderer extends DefaultListCellRenderer {
+        @Override
+        public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected, boolean cellHasFocus ) {
+            Component c = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
+            Color color = getNodeColor(((ListItem) value).getNode(), Color.gray);
+            if (!isSelected) color = Drawing.getColorBrighter(color);
+            c.setBackground(Drawing.getColorBrighter(color));
+            return c;
+        }
+    }
+    
+    private Color getNodeColor(Node n, Color normal) {
+        int deliveryManIndex = map.getNodeDeliveryManIndex(n);
+        if (deliveryManIndex < 0) return normal;
+        return Drawing.getColor(deliveryManIndex, map.getDeliveryMen().size());
     }
     
 }
