@@ -43,29 +43,19 @@ public class DeliveryMan {
             origin = deliveries.get(deliveries.size()-1).getNode();
         
         List<Section> sections = Dijkstra.getPath(map.getNodes(), origin, delivery.getNode());
-        for (Section section : sections)
-        {
-            if (section.getDestination() != delivery.getNode())
-                round.addPassage(section, 0);
-            else
-                round.addPassage(section, delivery.getDuration());
-        }
-        
+        round.addDeliveryRoute(delivery.getNode(), sections, true);
         deliveries.add(delivery);
     }
     
     void addNode(Node node, Map map) { // TODO : refactorer
         Node origin = null;
-        if (round.getItinerary().isEmpty())
+        if (deliveries.isEmpty())
             origin = map.getWarehouse();
         else
-            origin = round.getItinerary().get(round.getItinerary().size()-1).getSection().getDestination();
+            origin = deliveries.get(deliveries.size()-1).getNode();
         
         List<Section> sections = Dijkstra.getPath(map.getNodes(), origin, node);
-        for (Section section : sections)
-        {
-            round.addPassage(section, 0);
-        }
+        round.addDeliveryRoute(node, sections, false);
     }
     
     void clear() {
