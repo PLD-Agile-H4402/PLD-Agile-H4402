@@ -54,13 +54,12 @@ public class Window
         frame.setSize(200,200); //initialize status bar
         
         // Bottom status bar
-        JPanel statusBar = new JPanel();
-        statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        statusBar.setPreferredSize(new Dimension(frame.getWidth(), 16));
-        statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
-        JLabel statusLabel = new JLabel("Current status");
-        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        statusBar.add(statusLabel);
+        JPanel panStatus = new JPanel();
+        panStatus.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        panStatus.setPreferredSize(new Dimension(frame.getWidth(), 16));
+        panStatus.setLayout(new BoxLayout(panStatus, BoxLayout.X_AXIS));
+        JLabel lblStatus = new JLabel("Barre d'état");
+        lblStatus.setHorizontalAlignment(SwingConstants.LEFT);
         
         // Top tool-bar
         JToolBar tlbTop = new JToolBar();
@@ -108,6 +107,10 @@ public class Window
         // CREATING DISPLAY
         
         EmptyBorder spacer = new EmptyBorder(4, 4, 4, 4);
+        
+        // Bottom status bar
+        lblStatus.setBorder(spacer);
+        panStatus.add(lblStatus);
         
         // Top tool-bar
         tlbTop.add(btnOpenMap);
@@ -161,7 +164,7 @@ public class Window
         
         // Window
         JPanel panMain = new JPanel (new BorderLayout());
-        panMain.add(statusBar, BorderLayout.SOUTH);
+        panMain.add(panStatus, BorderLayout.SOUTH);
         panMain.add(mapViewGraphical,BorderLayout.CENTER);
         JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, panMain);
         frame.add(tlbTop, BorderLayout.NORTH);
