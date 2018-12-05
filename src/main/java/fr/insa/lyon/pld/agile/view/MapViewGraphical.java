@@ -238,14 +238,17 @@ public class MapViewGraphical extends MapView
                 
                 if (selDeliveryMan < 0 || selDeliveryMan == indexMan) {
                     float position = 0f;
-                    for (Passage p : deliveryMan.getRound().getItinerary()) {
-                        Node n2 = p.getSection().getDestination();
-                        Point coordsn2 = getCoordsToPixel(n2);
-                        
-                        Drawing.drawLineThick(g, coordsn1, coordsn2);
-                        if (isDirection) position = Drawing.drawLineArrows(g, coordsn1, coordsn2, position);
-                        
-                        coordsn1 = coordsn2;
+                    for (Route route : deliveryMan.getRound().getItinerary())
+                    {
+                        for (Passage p : route.getPassages()) {
+                            Node n2 = p.getSection().getDestination();
+                            Point coordsn2 = getCoordsToPixel(n2);
+
+                            Drawing.drawLineThick(g, coordsn1, coordsn2);
+                            if (isDirection) position = Drawing.drawLineArrows(g, coordsn1, coordsn2, position);
+
+                            coordsn1 = coordsn2;
+                        }
                     }
                 }
                 indexMan++;
