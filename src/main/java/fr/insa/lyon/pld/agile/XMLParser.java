@@ -83,12 +83,8 @@ public class XMLParser {
     }
     
     static public void loadDeliveries(Map map, Path path) throws IOException, SAXException, ParserConfigurationException {
-        loadDeliveries(map, Files.newInputStream(path));
-    }
-    
-    static public void loadDeliveries(Map map, InputStream stream) throws IOException, SAXException, ParserConfigurationException {
         SAXParser saxParser = spf.newSAXParser();
-        saxParser.parse(stream, new DeliveriesHandler(map));
+        saxParser.parse(Files.newInputStream(path), new DeliveriesHandler(map));
     }
 
     private static class DeliveriesHandler extends DefaultHandler {
