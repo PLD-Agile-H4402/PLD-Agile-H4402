@@ -46,6 +46,7 @@ public class Drawing {
         float uvy = (float) vy/vlen;
         
         int safety = 0;
+        Color color = g.getColor();
         boolean detected = false;
         
         float total;
@@ -62,6 +63,7 @@ public class Drawing {
                 System.out.println("p1: " + p1.x + ", " + p1.y);
                 System.out.println("p2: " + p2.x + ", " + p2.y);
                 }
+                g.setColor(color);
                 return position;
             }
             
@@ -71,7 +73,7 @@ public class Drawing {
             if ((vx*(p2.x-p1.x) + vy*(p2.y-p1.y)) < 0) {
                 g.setColor(Color.BLACK);
                 detected = true;
-                return position;
+                // return position;
             }
             
             drawLineThick(g,
@@ -86,6 +88,7 @@ public class Drawing {
             position = 0;
         }
         
+        g.setColor(color);
         return total; 
     }
     
