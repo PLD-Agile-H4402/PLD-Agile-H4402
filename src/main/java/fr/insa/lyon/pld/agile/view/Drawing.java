@@ -45,9 +45,22 @@ public class Drawing {
         float uvx = (float) vx/vlen;
         float uvy = (float) vy/vlen;
         
+        int safety = 0;
+        
         float total;
         float remaining = getPointsDistance(p1, p2);
         for (; (total = position+remaining) >= step;) {
+            if (safety++ > 20) {
+                System.out.println("DRAW LINE ARROWS");
+                System.out.println("position: " + position);
+                System.out.println("remaining: " + remaining);
+                System.out.println("vx: " + vx);
+                System.out.println("vy: " + vy);
+                System.out.println("vlen: " + vlen);
+                System.out.println("p1: " + p1.x + ", " + p1.y);
+                System.out.println("p2: " + p2.x + ", " + p2.y);
+                return position;
+            }
             
             p1.x += ((step-position)*vx)/vlen;
             p1.y += ((step-position)*vy)/vlen;
@@ -82,7 +95,7 @@ public class Drawing {
     protected static void drawDot(Graphics g, Point coords, int diameter) {
         g.fillOval((int) coords.getX()-diameter/2, (int) coords.getY()-diameter/2, diameter, diameter);
     }
-
+    
     protected static void drawWarehouse(Graphics g, Point coords) {
         g.setColor(Color.black);
         drawDot(g, coords, 11);
