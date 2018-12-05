@@ -115,10 +115,6 @@ public class Map {
         for (int i = 0; i < clusters.length; i++) {
             assignDelivery(deliveries.get(deliveryNodes.get(i).getId()), deliveryMen.get(clusters[i]));
         }
-
-        for (DeliveryMan deliveryMan : deliveryMen) {
-            deliveryMan.addNode(warehouse, this);
-        }
         
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
@@ -150,8 +146,6 @@ public class Map {
             for (Delivery d : best) {
                 deliveryMan.addDelivery(d, this);
             }
-            
-            deliveryMan.addNode(warehouse, this);
         }
         
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);

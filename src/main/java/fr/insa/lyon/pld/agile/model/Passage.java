@@ -1,14 +1,16 @@
 package fr.insa.lyon.pld.agile.model;
 
+import java.time.LocalTime;
+
 /**
  *
  * @author scheah
  */
 public class Passage {
     private final Section section;
-    private double arrivalTime;
+    private LocalTime arrivalTime;
 
-    public Passage(Section section, double arrivalTime) {
+    public Passage(Section section, LocalTime arrivalTime) {
         this.section = section;
         this.arrivalTime = arrivalTime;
     }
@@ -17,11 +19,11 @@ public class Passage {
         return section;
     }
 
-    public double getArrivalTime() {
+    public LocalTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(double arrivalTime) {
+    public void setArrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 }
