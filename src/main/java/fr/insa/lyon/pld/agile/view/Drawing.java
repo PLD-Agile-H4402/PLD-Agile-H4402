@@ -46,11 +46,13 @@ public class Drawing {
         float uvy = (float) vy/vlen;
         
         int safety = 0;
+        boolean detected = false;
         
         float total;
         float remaining = getPointsDistance(p1, p2);
         for (; (total = position+remaining) >= step;) {
             if (safety++ > 20) {
+                if (!detected) {
                 System.out.println("DRAW LINE ARROWS");
                 System.out.println("position: " + position);
                 System.out.println("remaining: " + remaining);
@@ -59,11 +61,18 @@ public class Drawing {
                 System.out.println("vlen: " + vlen);
                 System.out.println("p1: " + p1.x + ", " + p1.y);
                 System.out.println("p2: " + p2.x + ", " + p2.y);
+                }
                 return position;
             }
             
             p1.x += ((step-position)*vx)/vlen;
             p1.y += ((step-position)*vy)/vlen;
+            
+            if ((vx*(p2.x-p1.x) + vy*(p2.y-p1.y)) < 0) {
+                g.setColor(Color.BLACK);
+                detected = true;
+                return position;
+            }
             
             drawLineThick(g,
                 new Point(p1.x+(int)((-uvy-uvx)*8), p1.y+(int)((uvx-uvy)*8)),
