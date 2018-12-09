@@ -40,13 +40,13 @@ public class Map {
         this.deliveryMen = new ArrayList<>();
     }
     
-     public void addPropertyChangeListener(PropertyChangeListener listener) {
-         this.pcs.addPropertyChangeListener(listener);
-     }
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.addPropertyChangeListener(listener);
+    }
 
-     public void removePropertyChangeListener(PropertyChangeListener listener) {
-         this.pcs.removePropertyChangeListener(listener);
-     }
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        this.pcs.removePropertyChangeListener(listener);
+    }
     
     public Node getNode(long id) {
         return nodes.get(id);
