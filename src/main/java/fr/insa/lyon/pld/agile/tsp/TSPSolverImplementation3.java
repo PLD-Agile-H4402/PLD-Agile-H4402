@@ -3,7 +3,9 @@ package fr.insa.lyon.pld.agile.tsp;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class TSPSolverImplementation1 extends TSPSolverTemplate {
+public class TSPSolverImplementation3 extends TSPSolverTemplate {
+    
+    protected int minimumOutgoingBranch = Integer.MAX_VALUE;
 
     @Override
     protected Iterator<Integer> iterator(Integer currentNode, ArrayList<Integer> unexploredNodes, int[][] edgesCosts, int[] nodesCosts) {
@@ -12,6 +14,15 @@ public class TSPSolverImplementation1 extends TSPSolverTemplate {
     
     @Override
     protected int startBound(ArrayList<Integer> unexploredNodes, int[][] edgesCosts, int[] nodesCosts) {
+        for (int i = 0; i < unexploredNodes.size(); ++i) {
+            minimumOutgoingBranch = Math.min(minimumOutgoingBranch, edgesCosts[unexploredNodes.get(i)][0]);
+            for (int j = 0; j < unexploredNodes.size(); ++j) {
+                if (i != j) {
+                    minimumOutgoingBranch = Math.min(minimumOutgoingBranch, edgesCosts[unexploredNodes.get(i)][unexploredNodes.get(j)]);
+                }
+            }
+        }
+        
         // The start lower bound to be returned
         int lowerBound = 0;
         
@@ -52,26 +63,15 @@ public class TSPSolverImplementation1 extends TSPSolverTemplate {
         
         // The lower bound is at least the cost of the minimum incoming branch
         int minimumIncomingBranch = Integer.MAX_VALUE;
-        for(int i = 0; i < unexploredNodes.size(); ++i) {
+        for (int i = 0; i < unexploredNodes.size(); ++i) {
             if(edgesCosts[currentNode][unexploredNodes.get(i)] < minimumIncomingBranch) {
                 minimumIncomingBranch = edgesCosts[currentNode][unexploredNodes.get(i)];
             }
         }
         lowerBound += minimumIncomingBranch;
-    
+        
         // On top of this, let's add the cost of the minimum outgoing branch
-        for (int i = 0; i < unexploredNodes.size(); ++i) {
-            int minimumOutGoingBranch = edgesCosts[unexploredNodes.get(i)][0];
-            for (int j = 0; j < unexploredNodes.size(); ++j) {
-                if (i != j) {
-                    if(edgesCosts[unexploredNodes.get(i)][unexploredNodes.get(j)] < minimumOutGoingBranch) {
-                        minimumOutGoingBranch = edgesCosts[unexploredNodes.get(i)][unexploredNodes.get(j)];
-                    }
-                }
-            }
-            lowerBound += nodesCosts[unexploredNodes.get(i)];
-            lowerBound += minimumOutGoingBranch;
-        }
+        lowerBound += unexploredNodes.size() * minimumOutgoingBranch;
         return lowerBound;
     }
 
