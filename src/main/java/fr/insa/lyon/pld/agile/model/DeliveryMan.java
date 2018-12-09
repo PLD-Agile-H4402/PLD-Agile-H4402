@@ -70,4 +70,8 @@ public class DeliveryMan {
         round.clear();
         deliveries.clear();
     }
+    
+    void updateStartingHour(Map map) {
+        round.updateStartingHour(map);
+    }
 }

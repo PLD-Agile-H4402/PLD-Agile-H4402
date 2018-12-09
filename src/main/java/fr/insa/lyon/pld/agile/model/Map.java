@@ -100,12 +100,19 @@ public class Map {
         LocalTime oldStartingHour = startingHour;
         this.startingHour = startingHour;
         this.pcs.firePropertyChange("startingHour", oldStartingHour, startingHour);
+        
+        for (DeliveryMan deliveryMan : deliveryMen) {
+            deliveryMan.updateStartingHour(this);
+        }
+        
+        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
     public void setDeliveryManCount(int number) {
         deliveryMen.clear();
         for (int i = 0; i < number; i++)
             deliveryMen.add(new DeliveryMan(deliveryMen.size()));
+
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
