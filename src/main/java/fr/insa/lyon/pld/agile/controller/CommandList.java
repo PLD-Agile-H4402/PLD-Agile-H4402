@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insa.lyon.pld.agile.controller;
 
 import java.util.LinkedList;
@@ -32,8 +27,7 @@ public class CommandList {
     }
     
     public void undo() {
-        if(currentIndex >= 0)
-        {
+        if(currentIndex >= 0) {
             Command c = commandList.get(currentIndex);
             currentIndex--;
             c.undoCmd();
@@ -41,8 +35,7 @@ public class CommandList {
     }
     
     public void redo() {
-        if(currentIndex < commandList.size() -1)
-        {
+        if(currentIndex < commandList.size() -1) {
             currentIndex++;
             Command cmd = commandList.get(currentIndex);
             cmd.doCmd();

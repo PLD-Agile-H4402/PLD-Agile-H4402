@@ -25,6 +25,8 @@ public interface State {
     
     public void generateDeliveryMen(MainController controller, Map map, int deliveryMenCount, CommandList cmdList);
     
+    public void stopGeneration(MainController controller, Map map);
+    
     public void undo(CommandList cmdList);
     
     public void redo(CommandList cmdList);

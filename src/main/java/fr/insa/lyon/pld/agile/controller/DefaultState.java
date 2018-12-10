@@ -25,9 +25,9 @@ public abstract class DefaultState implements State{
     @Override
     public void generateDeliveryMen(MainController controller, Map map, int deliveryMenCount, CommandList cmdList) {}
     @Override
-    public void undo(CommandList cmdList) {
-        
-    }
+    public void stopGeneration(MainController controller, Map map) {}
+    @Override
+    public void undo(CommandList cmdList) {}
     @Override
     public void redo(CommandList cmdList) {}
     @Override

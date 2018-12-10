@@ -18,6 +18,7 @@ public class MainController {
     protected final MapLoadedState MAP_LOADED_STATE = new MapLoadedState();
     protected final DeliveriesLoadedState DELIVERIES_LOADED_STATE = new DeliveriesLoadedState();
     protected final AddDeliveryState ADD_DELIVERY_STATE = new AddDeliveryState();
+    protected final DeliveryMenComputingState DELIVERY_MEN_COMPUTING_STATE = new DeliveryMenComputingState();
     protected final DeliveryMenGeneratedState DELIVERY_MEN_GENERATED_STATE = new DeliveryMenGeneratedState();
 
     public MainController(Map map) {
@@ -45,7 +46,11 @@ public class MainController {
      
     public void generateDeliveryMen(int deliveryMenCount) {
         currentState.generateDeliveryMen(this, map, deliveryMenCount, cmdList);
-     }
+    }
+    
+    public void stopGeneration() {
+        currentState.stopGeneration(this, map);
+    }
     
     public void undo() {
         currentState.undo(cmdList);
@@ -74,46 +79,4 @@ public class MainController {
     public void selectedDeliveryMan(int deliveryManIndex) {
         view.selectDeliveryMan(deliveryManIndex);
     }
-    /*public void loadMapFile() throws IOException, SAXException, ParserConfigurationException {
-        File selectedFile = view.askFile("Chargement d'un plan");
-        if (selectedFile != null)
-        {
-            map.clear();
-            XMLParser.loadMap(map, selectedFile.toPath());
-        }
-    }
-    
-    public void loadDeliveriesFile() throws IOException, SAXException, ParserConfigurationException {
-        File selectedFile = view.askFile("Chargement de demandes de livraison");
-        if (selectedFile != null)
-        {
-            map.clearDeliveries();
-            map.setDeliveryManCount(0);
-            XMLParser.loadDeliveries(map, selectedFile.toPath());
-        }
-    }
-    
-    
-    public void selectedNode(Node node) {
-        view.selectNode(node);
-    }
-    
-    public void selectedDeliveryMan(int deliveryManIndex) {
-        view.selectDeliveryMan(deliveryManIndex);
-    }
-    
-    public void generateDeliveryMen(int deliveryMenCount) {
-        if (!map.isShorteningDeliveries()) {
-            System.err.println("Génération avec " + deliveryMenCount + " livreurs.");
-            map.setDeliveryManCount(deliveryMenCount);
-            System.err.println("Distribution des livraisons...");
-            map.distributeDeliveries();
-            System.err.println("Raccourcissement des livraisons...");
-            map.shortenDeliveriesInBackground();
-        } else {
-            System.err.println("Arrêt des calculs...");
-            map.stopShorteningDeliveries();
-        }
-    }
-    */
 }

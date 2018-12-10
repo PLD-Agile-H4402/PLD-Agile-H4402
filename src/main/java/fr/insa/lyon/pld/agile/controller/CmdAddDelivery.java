@@ -8,7 +8,7 @@ import fr.insa.lyon.pld.agile.model.Map;
  *
  * @author scheah
  */
-public class CmdAddDelivery implements Command{
+public class CmdAddDelivery implements Command {
     private Map map;
     private Delivery delivery;
     private DeliveryMan deliveryMan;

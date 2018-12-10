@@ -9,12 +9,11 @@ import java.io.File;
  *
  * @author scheah
  */
-public class InitialState extends DefaultState{
+public class InitialState extends DefaultState {
     @Override
     public void loadMap(MainController controller, Map map, CommandList cmdList, Window view) throws Exception {
         File selectedFile = view.askFile("Chargement d'un plan");
-        if (selectedFile != null)
-        {
+        if (selectedFile != null) {
             map.clear();
             XMLParser.loadMap(map, selectedFile.toPath());
         }
