@@ -32,14 +32,14 @@ public class MapLoadedState extends DefaultState{
     }
     
     @Override
-    public void loadNodesFile(MainController controller, Map map, CommandList cmdList, Window view) throws Exception {
+    public void loadMap(MainController controller, Map map, CommandList cmdList, Window view) throws Exception {
         File selectedFile = view.askFile("Chargement d'un plan");
         if (selectedFile != null)
         {
             map.clear();
-            XMLParser.loadNodes(map, selectedFile.toPath());
+            XMLParser.loadMap(map, selectedFile.toPath());
         }
-        controller.setCurrentState(controller.mapLoadedState);
+        controller.setCurrentState(controller.MAP_LOADED_STATE);
         cmdList.reset();
     }
     
@@ -51,7 +51,7 @@ public class MapLoadedState extends DefaultState{
             map.clearDeliveries();
             XMLParser.loadDeliveries(map, selectedFile.toPath());
         }
-        controller.setCurrentState(controller.deliveriesLoadedState);
+        controller.setCurrentState(controller.DELIVERIES_LOADED_STATE);
         cmdList.reset();
     }
 }

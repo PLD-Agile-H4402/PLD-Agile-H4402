@@ -23,12 +23,13 @@ public class CmdAddDelivery implements Command{
     
     @Override
     public void doCmd(){
-        delivery.setDeliveryMan(deliveryMan);
-        map.addDelivery(deliveryMan, delivery, ind);
+        map.addDelivery(delivery);
+        map.assignDelivery(ind, delivery, deliveryMan);
     }
 
     @Override
     public void undoCmd() {
-        map.removeDelivery(deliveryMan, ind);
+        map.unassignDelivery(ind,deliveryMan);
+        map.removeDelivery(delivery);
     }
 }

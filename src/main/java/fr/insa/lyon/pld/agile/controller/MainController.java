@@ -17,7 +17,8 @@ public class MainController {
     protected final InitialState INITIAL_STATE = new InitialState();
     protected final MapLoadedState MAP_LOADED_STATE = new MapLoadedState();
     protected final DeliveriesLoadedState DELIVERIES_LOADED_STATE = new DeliveriesLoadedState();
-    protected final AddDeliveryState1 ADD_DELIVERY_STATE1 = new AddDeliveryState1();
+    protected final AddDeliveryState ADD_DELIVERY_STATE = new AddDeliveryState();
+    protected final DeliveryMenGeneratedState DELIVERY_MEN_GENERATED_STATE = new DeliveryMenGeneratedState();
 
     public MainController(Map map) {
         this.map = map;
@@ -30,21 +31,21 @@ public class MainController {
         currentState = state;
     }
     
-    public void addDelivery(DeliveryMan deliveryMan, int ind, int duration) {
-        currentState.addDelivery(this, map, deliveryMan, ind, duration);
+     public void addDelivery(Node node) {
+        currentState.addDelivery(this, map, node);
     }
     
     public void deleteDelivery(DeliveryMan deliveryMan, int ind) {
         currentState.deleteDelivery(this, map, deliveryMan, ind, cmdList);
     }
     
-    public void changeDeliveryMan(DeliveryMan deliveryMan, int ind) {
-        currentState.changeDeliveryMan(this, map, deliveryMan, ind);
+    public void moveDelivery(Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndice, int newIndice) {
+        currentState.moveDelivery(this, map, delivery, oldDeliveryMan, newDeliveryMan, oldIndice, newIndice, cmdList);
     }
-    
+     
     public void generateDeliveryMen(int deliveryMenCount) {
-        currentState.generateDeliveryMen(this, map, deliveryMenCount);
-    }
+        currentState.generateDeliveryMen(this, map, deliveryMenCount, cmdList);
+     }
     
     public void undo() {
         currentState.undo(cmdList);
@@ -58,12 +59,20 @@ public class MainController {
         currentState.leftClick(this, map, cmdList, view, p);
     }
     
-    public void loadNodesFile() throws Exception {
-        currentState.loadNodesFile(this, map, cmdList, view);
+    public void loadMap() throws Exception {
+        currentState.loadMap(this, map, cmdList, view);
     }
     
     public void loadDeliveriesFile() throws Exception {
         currentState.loadDeliveriesFile(this, map, cmdList, view);
+    }
+    
+    public void selectedNode(Node node) {
+        view.selectNode(node);
+    }
+    
+    public void selectedDeliveryMan(int deliveryManIndex) {
+        view.selectDeliveryMan(deliveryManIndex);
     }
     /*public void loadMapFile() throws IOException, SAXException, ParserConfigurationException {
         File selectedFile = view.askFile("Chargement d'un plan");
@@ -94,7 +103,6 @@ public class MainController {
     }
     
     public void generateDeliveryMen(int deliveryMenCount) {
-<<<<<<< HEAD
         if (!map.isShorteningDeliveries()) {
             System.err.println("Génération avec " + deliveryMenCount + " livreurs.");
             map.setDeliveryManCount(deliveryMenCount);
@@ -107,14 +115,5 @@ public class MainController {
             map.stopShorteningDeliveries();
         }
     }
-=======
-        System.err.println("Génération avec " + deliveryMenCount + " livreurs.");
-        map.setDeliveryManCount(deliveryMenCount);
-        System.err.println("Distribution des livraisons...");
-        map.distributeDeliveries();
-        System.err.println("Raccourcissement des livraisons...");
-        map.shortenDeliveries();
-    }*/
-    
->>>>>>> Update Design Pattern Command and State
+    */
 }

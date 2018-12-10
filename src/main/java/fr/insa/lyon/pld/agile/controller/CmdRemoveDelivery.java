@@ -28,13 +28,13 @@ public class CmdRemoveDelivery implements Command{
     
     @Override
     public void doCmd(){
-        deliveryMan.removeDelivery(ind);
-        map.removeDelivery(deliveryMan, ind);
+        map.unassignDelivery(ind, deliveryMan);
+        map.removeDelivery(delivery);
     }
 
     @Override
     public void undoCmd() {
-        delivery.setDeliveryMan(deliveryMan);
-        map.addDelivery(deliveryMan, delivery, ind);
+        map.addDelivery(delivery);
+        map.assignDelivery(ind, delivery, deliveryMan);
     }
 }
