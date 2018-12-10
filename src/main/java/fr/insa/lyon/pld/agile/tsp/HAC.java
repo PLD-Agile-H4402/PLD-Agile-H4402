@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insa.lyon.pld.agile.tsp;
 
 import fr.insa.lyon.pld.agile.model.Node;
@@ -175,16 +170,6 @@ public class HAC {
         return nodesClusters;
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
     public static int[] HAC0(List<Node> nodes, int wantedClustersNb) {
         int crtClustersNb = nodes.size(); 
         int clusterMaxWeight = nodes.size()/wantedClustersNb + 1;
@@ -300,6 +285,4 @@ public class HAC {
     public static void main(String[] args) {
         test();
     }
-    
-    
 }
