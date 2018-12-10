@@ -14,6 +14,12 @@ import java.io.File;
  * @author scheah
  */
 public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
+    
+    @Override
+    public void enterState(Window window) {
+        window.setStatusMessage("Prêt");
+    }
+    
     @Override
     public void addDelivery(MainController controller, Map map, Node node) {
         controller.ADD_DELIVERY_STATE.enterAction(map, node);
@@ -34,10 +40,10 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
     
     @Override
     public void rightClick(MainController controller, Map map, CommandList cmdList, Window view, Point2D p) {
-        Node closest = selectNode(controller, map, cmdList, view, p);
+        /* Node closest = selectNode(controller, map, cmdList, view, p);
         if(closest != null) {
             //view.showOptionsNode(closest);
-        }
+        } */
     }
     
     @Override
