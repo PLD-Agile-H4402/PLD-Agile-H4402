@@ -180,19 +180,11 @@ public class Window
         // File opening
         
         btnUndo.addActionListener(e -> {
-            try {
-                controller.undo();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            controller.undo();
         });
         
         btnRedo.addActionListener(e -> {
-            try {
-                controller.redo();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            controller.redo();
         });
         
         btnOpenMap.addActionListener(e -> {
