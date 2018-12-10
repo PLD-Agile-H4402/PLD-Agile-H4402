@@ -40,10 +40,10 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
     
     @Override
     public void rightClick(MainController controller, Map map, CommandList cmdList, Window view, Point2D p) {
-        /* Node closest = selectNode(controller, map, cmdList, view, p);
+        Node closest = selectNode(controller, map, cmdList, view, p);
         if(closest != null) {
             //view.showOptionsNode(closest);
-        } */
+        }
     }
     
     @Override
