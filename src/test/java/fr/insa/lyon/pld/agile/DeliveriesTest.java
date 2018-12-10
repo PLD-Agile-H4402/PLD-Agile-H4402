@@ -30,31 +30,31 @@ public class DeliveriesTest {
     public void testAssignUnassign() throws IOException, SAXException, ParserConfigurationException{
 	Map map = new Map();
 	String pathStringMap = "src/test/res/map/mapSuccessSmall.xml";
-	
-        Path pathMap = Paths.get(pathStringMap);
-	
-        XMLParser.loadMap(map, pathMap);
-        
+
+	Path pathMap = Paths.get(pathStringMap);
+
+	XMLParser.loadMap(map, pathMap);
+
 	String pathStringDeliveries = "src/test/res/delivery/deliveriesSuccess6.xml";
-	
-        Path pathDeliveries = Paths.get(pathStringDeliveries);
+
+	Path pathDeliveries = Paths.get(pathStringDeliveries);
 	XMLParser.loadDeliveries(map, pathDeliveries);
-	
-        map.setDeliveryManCount(1);
-        
-        for(Delivery delivery: map.getDeliveries().values()) {
-            map.assignDelivery(delivery,map.getDeliveryMen().get(0));
-        }
-        
-        map.unassignDelivery(3,map.getDeliveryMen().get(0));
-        
-        LocalTime last = LocalTime.of(0, 0, 1, 1);
-        for(int i=0;i<map.getDeliveryMen().get(0).getRound().getItinerary().size();++i) {
-            LocalTime curr = map.getDeliveryMen().get(0).getRound().getItinerary().get(i).getArrivalTime();
-            System.out.println(last);
-            System.out.println(curr);
-            assertTrue(curr.compareTo(last)>0);
-            last=curr;
-        }
+
+	map.setDeliveryManCount(1);
+
+	for(Delivery delivery: map.getDeliveries().values()) {
+	    map.assignDelivery(delivery,map.getDeliveryMen().get(0));
+	}
+
+	map.unassignDelivery(3,map.getDeliveryMen().get(0));
+
+	LocalTime last = LocalTime.of(0, 0, 1, 1);
+	for(int i=0;i<map.getDeliveryMen().get(0).getRound().getItinerary().size();++i) {
+	    LocalTime curr = map.getDeliveryMen().get(0).getRound().getItinerary().get(i).getArrivalTime();
+	    System.out.println(last);
+	    System.out.println(curr);
+	    assertTrue(curr.compareTo(last)>0);
+	    last=curr;
+	}
     }
 }

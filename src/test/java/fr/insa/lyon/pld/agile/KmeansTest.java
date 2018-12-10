@@ -20,11 +20,11 @@ public class KmeansTest {
 	List<Node> nodes = generateNodes(nodesNb,width,height);
 
 	int[] clusters = KMeans.kMeans(nodes, clusterNb, null);
-	
+
 	for(int i=0; i<clusters.length; ++i) {
 	    assertTrue(clusters[i]>=0 && clusters[i]<clusterNb);
 	}
-	
+
     }
 
     private static List<Node> generateNodes(int nodesNb, int spaceHeight, int spaceWidth) {
