@@ -11,10 +11,7 @@ import java.awt.*;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 
 /**
  *
@@ -67,15 +64,15 @@ public class Window
         JToolBar tlbTop = new JToolBar();
         tlbTop.setFloatable(false);
         // and its buttons
-        btnOpenMap = new JButton(new ImageIcon("res/icons/map.png"));
+        btnOpenMap = new JButton(new ImageIcon(getClass().getResource("/icons/map.png")));
         btnOpenMap.setToolTipText("Ouvrir une carte");
-        btnOpenLoc = new JButton(new ImageIcon("res/icons/pin.png"));
+        btnOpenLoc = new JButton(new ImageIcon(getClass().getResource("/icons/pin.png")));
         btnOpenLoc.setToolTipText("Ouvrir des points de livraison");
-        btnDeliveryRecords = new JButton(new ImageIcon("res/icons/list.png"));
+        btnDeliveryRecords = new JButton(new ImageIcon(getClass().getResource("/icons/list.png")));
         btnDeliveryRecords.setToolTipText("Générer la liste de livraisons");
-        btnUndo = new JButton(new ImageIcon("res/icons/undo.png"));
+        btnUndo = new JButton(new ImageIcon(getClass().getResource("/icons/undo.png")));
         btnUndo.setToolTipText("Annuler");
-        btnRedo = new JButton(new ImageIcon("res/icons/redo.png"));
+        btnRedo = new JButton(new ImageIcon(getClass().getResource("/icons/redo.png")));
         btnRedo.setToolTipText("Refaire");
         cckLegend = new JCheckBox("Légende");
         cckDirection = new JCheckBox("Sens de parcours");
@@ -103,9 +100,9 @@ public class Window
         mapViews.add(mapViewTextual);
         map.addPropertyChangeListener(mapViewTextual);
         // > and their buttons
-        btnListAdd = new JButton(new ImageIcon("res/icons/add.png"));
-        btnListMove = new JButton(new ImageIcon("res/icons/move.png"));
-        btnListRemove = new JButton(new ImageIcon("res/icons/delete.png"));
+        btnListAdd = new JButton(new ImageIcon(getClass().getResource("/icons/add.png")));
+        btnListMove = new JButton(new ImageIcon(getClass().getResource("/icons/move.png")));
+        btnListRemove = new JButton(new ImageIcon(getClass().getResource("/icons/delete.png")));
         
         
         // CREATING DISPLAY
@@ -183,7 +180,7 @@ public class Window
         
         btnOpenMap.addActionListener(e -> {
             try {
-                controller.loadMapFile();
+                controller.loadMap();
                 stateRefresh();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -198,32 +195,27 @@ public class Window
                 ex.printStackTrace();
             }
         });
-
+        
         btnDeliveryRecords.addActionListener(e -> {
             try {
-                JFrame listDeliveries = new JFrame ("Plan de route");
+                JFrame listDeliveries = new JFrame("Plan de route");
                 listDeliveries.setVisible(true);
-
+                
                 DefaultListModel<String> model2 = new DefaultListModel<>(); 
                 JList<String> list2 = new JList<>(model2);
-
-                for (Route route : map.getDeliveryMen().get(0).getRound().getItinerary())
-                {
-                    Section lastsection = null;
-                    String lastsectionname = "";
-                    String currentsectionname = "";
+                
+                Section lastsection = null;
+                for (Route route : map.getDeliveryMen().get(0).getRound().getItinerary()) {
                     for (Passage location : route.getPassages()) {
                         Section currentsection = location.getSection();
-                        currentsectionname = currentsection.getName();
-                            if(!currentsectionname.equals(lastsectionname)) 
-                            ((DefaultListModel<String>)list2.getModel()).addElement(currentsectionname);
+                        if (lastsection!=null && !currentsection.getName().equals(lastsection.getName())) 
+                            ((DefaultListModel<String>)list2.getModel()).addElement(currentsection.getName());
                         lastsection = currentsection;
-                        lastsectionname = currentsectionname;
                     }
                 }
+                
                 listDeliveries.add(list2);
                 listDeliveries.pack();
-
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -239,7 +231,7 @@ public class Window
             boolean checked = cckDirection.getModel().isSelected();
             mapViewGraphical.showDirection(checked);
         });
-
+        
         cckLegend.addItemListener(e -> {
             boolean checked = cckLegend.getModel().isSelected();
             mapViewGraphical.showLegend(checked);
@@ -302,6 +294,5 @@ public class Window
             view.selectDeliveryMan(deliveryManIndex);
         }
     }
-   
     
 }
