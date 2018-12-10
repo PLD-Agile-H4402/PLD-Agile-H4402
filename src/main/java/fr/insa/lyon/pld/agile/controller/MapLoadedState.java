@@ -24,8 +24,8 @@ public class MapLoadedState extends InitialState {
             map.clearDeliveries();
             map.clearWarehouse();
             XMLParser.loadDeliveries(map, selectedFile.toPath());
+            controller.setCurrentState(controller.DELIVERIES_LOADED_STATE);
         }
-        controller.setCurrentState(controller.DELIVERIES_LOADED_STATE);
         cmdList.reset();
     }
     
