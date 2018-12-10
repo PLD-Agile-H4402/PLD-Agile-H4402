@@ -51,6 +51,8 @@ public abstract class DefaultState implements State {
     @Override
     public void btnStatusClick() { }
     @Override
+    public void keyEscape() { }
+    @Override
     public void handleExternalEvent(String eventName) { }
     
 }

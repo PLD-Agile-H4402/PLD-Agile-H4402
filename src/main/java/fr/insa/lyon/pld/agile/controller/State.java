@@ -39,6 +39,8 @@ public interface State {
     
     public void btnStatusClick();
     
+    public void keyEscape();
+    
     public void handleExternalEvent(String eventName);
     
 }

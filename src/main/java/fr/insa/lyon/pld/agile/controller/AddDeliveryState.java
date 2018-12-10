@@ -31,14 +31,18 @@ public class AddDeliveryState extends DefaultState {
     public void btnStatusClick() {
         cancelAddDelivery();
     }
+    @Override
+    public void keyEscape() {
+        cancelAddDelivery();
+    }
     
     @Override
-    public void validateAddDelivery(DeliveryMan deliveryMan, int ind) {
+    public void validateAddDelivery(DeliveryMan deliveryMan, int index) {
         Map map = controller.getMap();
         CommandList cmdList = controller.getCmdList();
         
         Delivery toBeAdded = new Delivery(node, duration, deliveryMan);
-        cmdList.addCommand(new CmdAddDelivery(map, toBeAdded, deliveryMan, ind));
+        cmdList.addCommand(new CmdAddDelivery(map, toBeAdded, deliveryMan, index));
         controller.setCurrentState(controller.DELIVERY_MEN_GENERATED_STATE);
     }
     

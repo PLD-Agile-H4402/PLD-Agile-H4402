@@ -106,6 +106,10 @@ public class MainController implements PropertyChangeListener{
         view.selectDeliveryMan(deliveryManIndex);
     }
 
+    public void keyEscape() {
+        currentState.keyEscape();
+    }
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

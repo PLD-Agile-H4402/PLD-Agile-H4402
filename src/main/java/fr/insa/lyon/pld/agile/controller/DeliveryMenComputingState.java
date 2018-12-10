@@ -22,6 +22,10 @@ public class DeliveryMenComputingState extends DefaultState {
     public void btnStatusClick() {
         generationInterrupt();
     }
+    @Override
+    public void keyEscape() {
+        generationInterrupt();
+    }
     
     @Override
     public void handleExternalEvent(String eventName) {

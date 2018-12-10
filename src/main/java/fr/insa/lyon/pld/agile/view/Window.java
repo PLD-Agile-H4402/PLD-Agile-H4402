@@ -9,6 +9,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 import java.io.File;
 import java.util.List;
@@ -339,6 +340,19 @@ public class Window
             mapViewGraphical.showLegend(checked);
         });
         
+        // TODO : replace ugly loop
+        for (Component component : frame.getComponents()) {
+            if (component instanceof JComponent) {
+                JComponent cmpn = (JComponent) component;
+                cmpn.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "strokeESCAPE");
+                cmpn.getActionMap().put("strokeESCAPE", new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        controller.keyEscape();
+                    }
+                });
+            }
+        }
         
         // READY
         
