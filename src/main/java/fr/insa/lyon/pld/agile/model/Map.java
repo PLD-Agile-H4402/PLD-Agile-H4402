@@ -115,14 +115,14 @@ public class Map {
             deliveryMan.updateStartingHour(this);
         }
         
-        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+        this.pcs.firePropertyChange("deliveryMan", null, deliveryMen);
     }
     
     public void setDeliveryManCount(int number) {
         deliveryMen.clear();
         for (int i = 0; i < number; i++)
             deliveryMen.add(new DeliveryMan(deliveryMen.size()));
-
+        
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
@@ -136,7 +136,7 @@ public class Map {
             assignDelivery(deliveries.get(deliveryNode.getId()), deliveryMen.get(clusters[i]));
         }
         
-        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+        this.pcs.firePropertyChange("deliveryMan", null, deliveryMen);
     }
     
     public void shortenDeliveriesInBackground() {
@@ -171,7 +171,7 @@ public class Map {
                     deliveryMan.addDelivery(deliveries.get(index), Map.this);
                 }
                 
-                Map.this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+                Map.this.pcs.firePropertyChange("deliveryMan", null, deliveryMen);
                 
                 if (pce.getPropertyName().equals("finalBestPath")) {
                     pendingSolvers.remove(tspSolver);
@@ -199,15 +199,16 @@ public class Map {
     public void assignDelivery(int index, Delivery delivery, DeliveryMan deliveryMan) {
         if (deliveryMan.addDelivery(index, delivery, this)) { //TODO : handle unreachable deliveries
             delivery.setDeliveryMan(deliveryMan);
-            this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+            
+            this.pcs.firePropertyChange("deliveryMan", null, deliveryMen);
         }
     }
     
     public void assignDelivery(Delivery delivery, DeliveryMan deliveryMan) {
         if (deliveryMan.addDelivery(delivery, this)) {
             delivery.setDeliveryMan(deliveryMan);
-        
-            this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+            
+            this.pcs.firePropertyChange("deliveryMan", null, deliveryMen);
         }
     }
     
@@ -216,7 +217,7 @@ public class Map {
         deliveryMan.removeDelivery(index, this);
         delivery.setDeliveryMan(null);
         
-        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+        this.pcs.firePropertyChange("deliveryMan", null, deliveryMen);
     }
     
     public void unassignDelivery(Delivery delivery) {
@@ -227,7 +228,7 @@ public class Map {
         deliveryMan.removeDelivery(delivery, this);
         delivery.setDeliveryMan(null);
         
-        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+        this.pcs.firePropertyChange("deliveryMan", null, deliveryMen);
     }
         
     public void clear() {

@@ -33,6 +33,7 @@ public class MapViewTextual extends MapView
     private List<DefaultListModel<ListItem>> lists = null;
     
     private Node selNode = null;
+    private int selDeliveryMan = -1;
     
     Boolean raiseevents = true;
     
@@ -52,7 +53,7 @@ public class MapViewTextual extends MapView
             public void stateChanged(ChangeEvent e) {
                 int deliveryManIndex = panTabs.getSelectedIndex()-1;
                 selectDeliveryMan(deliveryManIndex);
-                controller.selectedDeliveryMan(panTabs.getSelectedIndex()-1);
+                controller.selectedDeliveryMan(selDeliveryMan);
             }
         });
     }
@@ -68,9 +69,15 @@ public class MapViewTextual extends MapView
     
     @Override
     public void updateDeliveryMen() {
+        selDeliveryMan = -1;
         recreate();
     }
-
+    
+    @Override
+    public void updateDeliveryMan() {
+        recreate();
+    }
+    
     @Override
     public void updateStartingHour() {
     }
@@ -123,8 +130,11 @@ public class MapViewTextual extends MapView
     
     @Override
     public void selectDeliveryMan(int deliveryManIndex) {
-        if (panTabs.getSelectedIndex() != deliveryManIndex+1) {
-            panTabs.setSelectedIndex(deliveryManIndex+1);
+        if (selDeliveryMan != deliveryManIndex) {
+            selDeliveryMan = deliveryManIndex;
+        }
+        if (panTabs.getSelectedIndex() != selDeliveryMan+1) {
+            panTabs.setSelectedIndex(selDeliveryMan+1);
         }
     }
     
@@ -136,23 +146,16 @@ public class MapViewTextual extends MapView
         
         DefaultListModel<ListItem> items = new DefaultListModel<>();
         
-        int indexMan;
-        int indexNode;
-        
         if (map != null) {
-            indexMan = 0;
-            for (DeliveryMan deliveryMan : map.getDeliveryMen())
-            {
-                indexMan++;
-                
+            for (DeliveryMan deliveryMan : map.getDeliveryMen()) {
                 for (Route route : deliveryMan.getRound().getItinerary()) {
                     items.addElement(new ListItem(route));
                 }
             }
             
-            if (indexMan == 0) {
-                indexNode = 0;
-                for (Delivery d : map.getDeliveries().values()) {
+            int indexNode = items.size();
+            for (Delivery d : map.getDeliveries().values()) {
+                if (d.getDeliveryMan() == null) {
                     indexNode++;
                     items.addElement(new ListItem(d.getNode(), "Point de livraison " + indexNode));
                 }
@@ -162,10 +165,8 @@ public class MapViewTextual extends MapView
         newTab("Tous", items, "");
         
         if (map != null) {
-            indexMan = 0;
-            
-            for (DeliveryMan deliveryMan : map.getDeliveryMen())
-            {
+            int indexMan = 0;
+            for (DeliveryMan deliveryMan : map.getDeliveryMen()) {
                 indexMan++;
                 
                 items = new DefaultListModel<>();
@@ -185,6 +186,13 @@ public class MapViewTextual extends MapView
                 newTab("L" + indexMan, items, info);
             }
         }
+        
+        int prevDeliveryMan = selDeliveryMan;
+        Node prevNode = selNode;
+        selDeliveryMan = -1;
+        selectDeliveryMan(prevDeliveryMan);
+        selNode = null;
+        selectNode(prevNode);
     }
     
     protected void newTab(String tabName, DefaultListModel<ListItem> tabList, String infos) {
@@ -270,7 +278,7 @@ public class MapViewTextual extends MapView
         public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected, boolean cellHasFocus ) {
             Component c = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
             Color color = getNodeColor(((ListItem) value).getNode(), Color.gray);
-            if (!isSelected) color = Drawing.getColorBrighter(color);
+            if (!isSelected) color = Drawing.getColorBrighter(Drawing.getColorBrighter(color));
             c.setBackground(Drawing.getColorBrighter(color));
             return c;
         }

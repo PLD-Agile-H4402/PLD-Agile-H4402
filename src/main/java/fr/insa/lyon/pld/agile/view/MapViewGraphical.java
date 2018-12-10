@@ -50,8 +50,8 @@ public class MapViewGraphical extends MapView
     private double ratioY;
     private double ratio;
     
-    Node selNode = null;
-    int selDeliveryMan = -1;
+    private Node selNode = null;
+    private int selDeliveryMan = -1;
     
     private boolean isDirection = false;
     private boolean isLegend = false;
@@ -107,18 +107,36 @@ public class MapViewGraphical extends MapView
         calcScale();
         calcPreferredSize();
         
+        selNode = null;
+        
         imageMap = null;
         this.repaint();
     }
     
     @Override
-    public void updateDeliveries()
-    {
-        selNode = null;
-        selDeliveryMan = -1;
-        
+    public void updateDeliveries() {
         imageDeliveries = null;
         this.repaint();
+    }
+    
+    @Override
+    public void updateDeliveryMen() {
+        selDeliveryMan = -1;
+        updateDeliveries();
+    }
+    
+    @Override
+    public void updateDeliveryMan() {
+        updateDeliveries();
+    }
+    
+    @Override
+    public void updateStartingHour() {
+    }
+    
+    @Override
+    public void updateWarehouse() {
+        updateNodes();
     }
     
     @Override
@@ -132,8 +150,7 @@ public class MapViewGraphical extends MapView
     }
     
     @Override
-    public void selectDeliveryMan(int deliveryManIndex)
-    {
+    public void selectDeliveryMan(int deliveryManIndex) {
         if (selDeliveryMan != deliveryManIndex) {
             selDeliveryMan = deliveryManIndex;
             
@@ -159,22 +176,7 @@ public class MapViewGraphical extends MapView
         }
     }
     
-    @Override
-    public void updateDeliveryMen() {
-        updateDeliveries();
-    }
-    
-    @Override
-    public void updateStartingHour() {
-    }
-    
-    @Override
-    public void updateWarehouse() {
-        updateNodes();
-    }
-    
-    public void calcScale()
-    {
+    public void calcScale() {
         hasScale = false;
         
         if (!hasData) return;
@@ -199,7 +201,7 @@ public class MapViewGraphical extends MapView
     public void eventClicked(MouseEvent e) {
         if (!(hasData && hasScale)) return;
         
-        Point2D coord = getPixelToPoint(this.getWidth() - e.getX(), this.getHeight() - deltaY - e.getY());
+        Point2D coord = getPixelToPoint(e.getX() - deltaX, this.getHeight() - deltaY - e.getY());
         
         double closestdistance = -1;
         Node closest = null;
@@ -223,8 +225,7 @@ public class MapViewGraphical extends MapView
     }
     
     @Override
-    public void paintComponent(Graphics g0)
-    {
+    public void paintComponent(Graphics g0) {
         super.paintComponent(g0);
         
         if (!(hasData && hasScale)) return;

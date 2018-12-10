@@ -26,6 +26,9 @@ public abstract class MapView extends JPanel implements PropertyChangeListener {
             case "deliveryMen":
                 updateDeliveryMen();
                 break;
+            case "deliveryMan":
+                updateDeliveryMan();
+                break;
             case "startingHour":
                 updateStartingHour();
                 break;
@@ -38,6 +41,7 @@ public abstract class MapView extends JPanel implements PropertyChangeListener {
     public abstract void updateNodes();
     public abstract void updateDeliveries();
     public abstract void updateDeliveryMen();
+    public abstract void updateDeliveryMan();
     public abstract void updateStartingHour();
     public abstract void updateWarehouse();
     
