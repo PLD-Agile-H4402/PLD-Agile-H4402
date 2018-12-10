@@ -18,7 +18,7 @@ public class AddDeliveryState extends DefaultState {
         super(controller);
     }
     
-    protected void prepareState(Map map, Node node) {
+    protected void prepareState(Node node) {
         this.node = node;
     }
     @Override
@@ -33,7 +33,10 @@ public class AddDeliveryState extends DefaultState {
     }
     
     @Override
-    public void validateAddDelivery(Map map, DeliveryMan deliveryMan, int ind, CommandList cmdList) {
+    public void validateAddDelivery(DeliveryMan deliveryMan, int ind) {
+        Map map = controller.getMap();
+        CommandList cmdList = controller.getCmdList();
+        
         Delivery toBeAdded = new Delivery(node, duration, deliveryMan);
         cmdList.addCommand(new CmdAddDelivery(map, toBeAdded, deliveryMan, ind));
         controller.setCurrentState(controller.DELIVERY_MEN_GENERATED_STATE);

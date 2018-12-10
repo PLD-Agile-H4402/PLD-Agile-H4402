@@ -321,11 +321,8 @@ public class Window
         
         btnGenerate.addActionListener(e -> {
             int nbDeliveryMen = (int) numDeliveries.getValue();
-            if (!map.isShorteningDeliveries()) {
+            if (!map.isShorteningDeliveries())
                 controller.generateDeliveryMen(nbDeliveryMen);
-            } else {
-                controller.stopGeneration();
-            }
         });
         
         btnStatus.addActionListener(e -> {

@@ -1,6 +1,5 @@
 package fr.insa.lyon.pld.agile.controller;
 
-import fr.insa.lyon.pld.agile.model.Map;
 import fr.insa.lyon.pld.agile.view.Window;
 
 /**
@@ -21,21 +20,25 @@ public class DeliveryMenComputingState extends DefaultState {
     }
     @Override
     public void btnStatusClick() {
-        stopGeneration(controller.getMap());
+        generationInterrupt();
     }
     
     @Override
-    public void stopGeneration(Map map)
-    {
-        System.err.println("Arrêt des calculs...");
+    public void handleExternalEvent(String eventName) {
+        switch (eventName) {
+            case "shortenDeliveriesFinished":
+                generationFinished();
+                break;
+        }
+    }
+    
+    private void generationInterrupt() {
+        System.out.println("Arrêt des calculs...");
         
-        map.stopShorteningDeliveries();
+        controller.getMap().stopShorteningDeliveries();
         controller.setCurrentState(controller.DELIVERY_MEN_GENERATED_STATE);
     }
-    
-    @Override
-    public void generationFinished(Map map)
-    {
+    private void generationFinished() {
         controller.setCurrentState(controller.DELIVERY_MEN_GENERATED_STATE);
     }
     

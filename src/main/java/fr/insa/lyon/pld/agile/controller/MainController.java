@@ -1,8 +1,8 @@
 package fr.insa.lyon.pld.agile.controller;
 
 import fr.insa.lyon.pld.agile.model.*;
-import fr.insa.lyon.pld.agile.view.MapViewGraphical;
 import fr.insa.lyon.pld.agile.view.Window;
+import fr.insa.lyon.pld.agile.view.MapViewGraphical;
 import fr.insa.lyon.pld.agile.xml.XMLParser;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
@@ -45,29 +45,21 @@ public class MainController implements PropertyChangeListener{
     }
     
     public void addDelivery(Node node) {
-        currentState.addDelivery(map, node);
+        currentState.addDelivery(node);
     }
     
     public void deleteDelivery(Delivery delivery) {
-        currentState.deleteDelivery(map, delivery, cmdList);
+        currentState.deleteDelivery(delivery);
     }
     
     public void moveDelivery(Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndice, int newIndice) {
-        currentState.moveDelivery(map, delivery, oldDeliveryMan, newDeliveryMan, oldIndice, newIndice, cmdList);
+        currentState.moveDelivery(delivery, oldDeliveryMan, newDeliveryMan, oldIndice, newIndice);
     }
      
     public void generateDeliveryMen(int deliveryMenCount) {
-        currentState.generateDeliveryMen(map, deliveryMenCount, cmdList);
+        currentState.generateDeliveryMen(deliveryMenCount);
     }
     
-    public void stopGeneration() {
-        currentState.stopGeneration(map);
-    }
-    
-    public void generationFinished(){
-        currentState.generationFinished(map);
-    }
-            
     public void undo() {
         cmdList.undo();
     }
@@ -80,11 +72,11 @@ public class MainController implements PropertyChangeListener{
         currentState.btnStatusClick();
     }
     
-    public void mapClickLeft(MapViewGraphical mapview, Point2D p) {
-        currentState.mapClickLeft(map, cmdList, mapview, p);
+    public void mapClickLeft(MapViewGraphical mapview, Point2D coords) {
+        currentState.mapClickLeft(mapview, coords);
     }
-    public void mapClickRight(MapViewGraphical mapview, Point2D p) {
-        currentState.mapClickRight(map, cmdList, mapview, p);
+    public void mapClickRight(MapViewGraphical mapview, Point2D coords) {
+        currentState.mapClickRight(mapview, coords);
     }
     
     public void loadMap() throws Exception {
@@ -117,11 +109,7 @@ public class MainController implements PropertyChangeListener{
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
-        switch (propertyName) {
-            case "shortenDeliveriesFinished":
-                currentState.generationFinished(map);
-                break;
-        }
+        currentState.handleExternalEvent(propertyName);
     }
     
 }
