@@ -199,7 +199,7 @@ public class MapViewGraphical extends MapView
     public void eventClicked(MouseEvent e) {
         if (!(hasData && hasScale)) return;
         
-        Point2D coord = getPixelToPoint(this.getWidth() - deltaX - e.getX(), this.getHeight() - deltaY - e.getY());
+        Point2D coord = getPixelToPoint(this.getWidth() - e.getX(), this.getHeight() - deltaY - e.getY());
         
         double closestdistance = -1;
         Node closest = null;
@@ -239,7 +239,7 @@ public class MapViewGraphical extends MapView
         deltaY = (height - imageHeight) / 2;
         
         g0.clearRect(0, 0, width, height);
-        g0.drawImage(imageSelection, deltaX+imageWidth, deltaY+imageHeight, -imageWidth, -imageHeight, null);
+        g0.drawImage(imageSelection, deltaX, deltaY+imageHeight, imageWidth, -imageHeight, null);
     }
     
     private void paintMap() {
@@ -260,8 +260,6 @@ public class MapViewGraphical extends MapView
                 Drawing.drawLine(g, coordsn1, coordsn2);
             }
         }
-        
-        System.out.println("redraw map");
         
         g.dispose();
         imageDeliveries = null;
@@ -306,8 +304,6 @@ public class MapViewGraphical extends MapView
             Drawing.drawDelivery(g, coords, color);
         }
         
-        System.out.println("redraw deliveries");
-        
         g.dispose();
         imageSelection = null;
     }
@@ -326,8 +322,6 @@ public class MapViewGraphical extends MapView
             Color color = getNodeColor(selNode, Color.gray);
             Drawing.drawSelectedNode(g, coords, color);
         }
-        
-        System.out.println("redraw selection");
         
         g.dispose();
     }

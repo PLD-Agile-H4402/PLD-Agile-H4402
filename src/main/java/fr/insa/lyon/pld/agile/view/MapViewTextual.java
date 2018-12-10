@@ -134,12 +134,10 @@ public class MapViewTextual extends MapView
         
         panTabs.removeAll();
         
-        DefaultListModel<ListItem> itemsAll = new DefaultListModel<>();
+        DefaultListModel<ListItem> items = new DefaultListModel<>();
         
         int indexMan;
         int indexNode;
-        
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         
         if (map != null) {
             indexMan = 0;
@@ -147,14 +145,8 @@ public class MapViewTextual extends MapView
             {
                 indexMan++;
                 
-                indexNode = 0;
-                
                 for (Route route : deliveryMan.getRound().getItinerary()) {
-                    indexNode++;
-                    List<Passage> passages = route.getPassages();
-                    itemsAll.addElement(new ListItem(route.getDestination(), route.getArrivalTime().format(dtf)
-                            + " - "
-                            + passages.get(passages.size()-1).getSection().getName()));
+                    items.addElement(new ListItem(route));
                 }
             }
             
@@ -162,12 +154,12 @@ public class MapViewTextual extends MapView
                 indexNode = 0;
                 for (Delivery d : map.getDeliveries().values()) {
                     indexNode++;
-                    itemsAll.addElement(new ListItem(d.getNode(), "Point " + indexNode));
+                    items.addElement(new ListItem(d.getNode(), "Point de livraison " + indexNode));
                 }
             }
         }
         
-        newTab("Tous", itemsAll, "");
+        newTab("Tous", items, "");
         
         if (map != null) {
             indexMan = 0;
@@ -176,26 +168,19 @@ public class MapViewTextual extends MapView
             {
                 indexMan++;
                 
-                indexNode = 0;
-                DefaultListModel<ListItem> items = new DefaultListModel<>();
-                //deliveryMan.getRound().getItinerary()
-                
-                //TODO : refactor this copy-paste !
+                items = new DefaultListModel<>();
                 for (Route route : deliveryMan.getRound().getItinerary()) {
-                    indexNode++;
-                    List<Passage> passages = route.getPassages();
-                    items.addElement(new ListItem(route.getDestination(), route.getArrivalTime().format(dtf)
-                            + " - "
-                            + passages.get(passages.size()-1).getSection().getName()));
+                    items.addElement(new ListItem(route));
                 }
                 
+                String info;
                 List<Route> itinerary = deliveryMan.getRound().getItinerary();
-                String info = "Itinéraire vide !";
-                if(!itinerary.isEmpty()) {
+                if (!itinerary.isEmpty()) {
                     LocalTime arrivalTime = itinerary.get(itinerary.size()-1).getArrivalTime();
-                    info = "Arrivée : " + arrivalTime.format(dtf);
+                    info = "Arrivée : " + TimeToText(arrivalTime);
+                } else {
+                    info = "Itinéraire vide !";
                 }
-                
                 
                 newTab("L" + indexMan, items, info);
             }
@@ -210,16 +195,13 @@ public class MapViewTextual extends MapView
         jlists.add(lstList);
         lists.add(tabList);
         
-        lstList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!raiseevents) return;
-                int index = lstList.getSelectedIndex();
-                Node node = (index == -1 ? null : tabList.get(index).getNode());
-                if (selNode != node) {
-                    selectNode(node);
-                    controller.selectedNode(node);
-                }
+        lstList.addListSelectionListener((ListSelectionEvent e) -> {
+            if (!raiseevents) return;
+            int index = lstList.getSelectedIndex();
+            Node node = (index == -1 ? null : tabList.get(index).getNode());
+            if (selNode != node) {
+                selectNode(node);
+                controller.selectedNode(node);
             }
         });
         
@@ -251,10 +233,22 @@ public class MapViewTextual extends MapView
         // }
     }
     
+    public static String TimeToText(LocalTime time) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        return time.format(dtf);
+    }
+    
     public class ListItem
     {
         Node node;
         String repr;
+        
+        public ListItem(Route route) {
+            node = route.getDestination();
+            List<Passage> passages = route.getPassages();
+            repr = TimeToText(route.getArrivalTime());
+            if (!passages.isEmpty()) repr += " - " + passages.get(passages.size()-1).getSection().getName();
+        }
         
         public ListItem(Node node, String repr) {
             this.node = node;
