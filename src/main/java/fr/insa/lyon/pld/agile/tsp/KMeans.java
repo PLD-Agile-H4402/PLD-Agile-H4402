@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.insa.lyon.pld.agile.tsp;
-
 
 import fr.insa.lyon.pld.agile.model.*;
 import java.awt.geom.Point2D;
@@ -14,10 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-
-
 // https://elki-project.github.io/tutorial/same-size_k_means
-
 
 /**
  *
