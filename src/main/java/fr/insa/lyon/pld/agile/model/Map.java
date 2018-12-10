@@ -137,7 +137,7 @@ public class Map {
     
     public void shortenDeliveries() {
         for (DeliveryMan deliveryMan : deliveryMen) {
-            List<Delivery> deliveries = deliveryMan.getDeliveries();
+            List<Delivery> deliveries = new ArrayList<>(deliveryMan.getDeliveries());
             TSPSolver tspSolver = TSPSolverFactory.getSolver(deliveries.size());
             int[][] edgesCosts = new int[deliveries.size()][deliveries.size()];
             int[] nodesCost = new int[deliveries.size()];
@@ -156,16 +156,12 @@ public class Map {
                 nodesCost[i] = from.getDuration();
             }
 
-            tspSolver.solve(1000, deliveries.size(), edgesCosts, nodesCost);
-            
-            List<Delivery> best = new ArrayList<>();
-            for (int i = 0; i < deliveries.size(); i++) {
-                best.add(deliveries.get(tspSolver.getBestNode(i)));
-            }
+            List<Integer> bestIds = tspSolver.solve(deliveries.size(), edgesCosts, nodesCost);
             
             deliveryMan.clear();
-            for (Delivery d : best) {
-                deliveryMan.addDelivery(d, this);
+            
+            for (Integer index : bestIds) {
+                deliveryMan.addDelivery(deliveries.get(index), this);
             }
         }
         
