@@ -14,10 +14,10 @@ import java.io.File;
  * @author Stanley
  */
 public class MainController implements PropertyChangeListener{
-    private Map map;
-    private Window view;
+    private final Map map;
+    private final Window view;
     private State currentState;
-    private CommandList cmdList;
+    private final CommandList cmdList;
     
     protected final InitialState INITIAL_STATE = new InitialState(this);
     protected final MapLoadedState MAP_LOADED_STATE = new MapLoadedState(this);
@@ -25,7 +25,7 @@ public class MainController implements PropertyChangeListener{
     protected final AddDeliveryState ADD_DELIVERY_STATE = new AddDeliveryState(this);
     protected final DeliveryMenComputingState DELIVERY_MEN_COMPUTING_STATE = new DeliveryMenComputingState(this);
     protected final DeliveryMenGeneratedState DELIVERY_MEN_GENERATED_STATE = new DeliveryMenGeneratedState(this);
-
+    
     public MainController(Map map) {
         this.map = map;
         this.view = new Window(map, this);
@@ -33,7 +33,11 @@ public class MainController implements PropertyChangeListener{
         setCurrentState(INITIAL_STATE);
         map.addPropertyChangeListener(this);
     }
-
+    
+    public Map getMap() { return map; }
+    public Window getWindow() { return view; }
+    public CommandList getCmdList() { return cmdList; }
+    
     protected final void setCurrentState(State state) {
         currentState = state;
         state.enterState(view);
@@ -70,6 +74,10 @@ public class MainController implements PropertyChangeListener{
     
     public void redo() {
         cmdList.redo();
+    }
+    
+    public void btnStatusClick() {
+        currentState.btnStatusClick();
     }
     
     public void mapClickLeft(MapViewGraphical mapview, Point2D p) {

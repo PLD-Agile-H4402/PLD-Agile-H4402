@@ -24,7 +24,12 @@ public class AddDeliveryState extends DefaultState {
     @Override
     public void enterState(Window window) {
         window.setStatusMessage("Ajout d'un point de livraison");
+        window.setStatusButton("Annuler");
         window.setButtonsState(false, false, false, false, false, false);
+    }
+    @Override
+    public void btnStatusClick() {
+        cancelAddDelivery();
     }
     
     @Override

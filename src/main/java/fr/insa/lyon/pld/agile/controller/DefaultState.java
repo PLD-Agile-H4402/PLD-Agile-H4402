@@ -53,4 +53,7 @@ public abstract class DefaultState implements State {
     public void mapClickRight(Map map, CommandList cmdList, MapViewGraphical mapView, Point2D p) {
     }
     
+    @Override
+    public void btnStatusClick() { }
+    
 }

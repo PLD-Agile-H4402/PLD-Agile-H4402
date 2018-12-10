@@ -39,7 +39,9 @@ public class Window
     private final JButton btnListMove;
     private final JButton btnListRemove;
     private final JButton btnDeliveryRecords;
+    
     private final JLabel lblStatus;
+    private final JButton btnStatus;
     
     List<MapView> mapViews = new ArrayList<>();
     
@@ -126,6 +128,7 @@ public class Window
         panStatus.setBorder(new BevelBorder(BevelBorder.LOWERED));
         panStatus.setLayout(new BoxLayout(panStatus, BoxLayout.X_AXIS));
         lblStatus = new JLabel("Barre d'état");
+        btnStatus = new JButton("");
         
         // Top tool-bar
         JToolBar tlbTop = new JToolBar();
@@ -183,6 +186,8 @@ public class Window
         // Bottom status bar
         lblStatus.setBorder(semispacer);
         panStatus.add(lblStatus);
+        panStatus.add(Box.createHorizontalGlue());
+        panStatus.add(btnStatus);
         
         // Top tool-bar
         tlbTop.add(btnOpenMap);
@@ -323,6 +328,10 @@ public class Window
             }
         });
         
+        btnStatus.addActionListener(e -> {
+            controller.btnStatusClick();
+        });
+        
         cckDirection.addItemListener(e -> {
             boolean checked = cckDirection.getModel().isSelected();
             mapViewGraphical.showDirection(checked);
@@ -392,6 +401,11 @@ public class Window
     
     public void setStatusMessage(String message) {
         lblStatus.setText(message);
+        btnStatus.setVisible(false);
+    }
+    public void setStatusButton(String caption) {
+        btnStatus.setText(caption);
+        btnStatus.setVisible(true);
     }
     
 }

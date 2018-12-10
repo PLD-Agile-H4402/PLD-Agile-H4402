@@ -38,4 +38,6 @@ public interface State {
     
     public void mapClickRight(Map map, CommandList cmdList, MapViewGraphical mapView, Point2D p);
     
+    public void btnStatusClick();
+    
 }
