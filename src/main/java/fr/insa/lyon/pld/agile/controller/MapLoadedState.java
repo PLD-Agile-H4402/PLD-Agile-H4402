@@ -11,7 +11,7 @@ import java.io.File;
  *
  * @author scheah
  */
-public class MapLoadedState extends DefaultState {
+public class MapLoadedState extends InitialState {
     
     @Override
     public void enterState(Window window) {
