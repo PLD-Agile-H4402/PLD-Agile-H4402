@@ -16,49 +16,49 @@ public class MainController implements PropertyChangeListener{
     private State currentState;
     private CommandList cmdList;
     
-    protected final InitialState INITIAL_STATE = new InitialState();
-    protected final MapLoadedState MAP_LOADED_STATE = new MapLoadedState();
-    protected final DeliveriesLoadedState DELIVERIES_LOADED_STATE = new DeliveriesLoadedState();
-    protected final AddDeliveryState ADD_DELIVERY_STATE = new AddDeliveryState();
-    protected final DeliveryMenComputingState DELIVERY_MEN_COMPUTING_STATE = new DeliveryMenComputingState();
-    protected final DeliveryMenGeneratedState DELIVERY_MEN_GENERATED_STATE = new DeliveryMenGeneratedState();
+    protected final InitialState INITIAL_STATE = new InitialState(this);
+    protected final MapLoadedState MAP_LOADED_STATE = new MapLoadedState(this);
+    protected final DeliveriesLoadedState DELIVERIES_LOADED_STATE = new DeliveriesLoadedState(this);
+    protected final AddDeliveryState ADD_DELIVERY_STATE = new AddDeliveryState(this);
+    protected final DeliveryMenComputingState DELIVERY_MEN_COMPUTING_STATE = new DeliveryMenComputingState(this);
+    protected final DeliveryMenGeneratedState DELIVERY_MEN_GENERATED_STATE = new DeliveryMenGeneratedState(this);
 
     public MainController(Map map) {
         this.map = map;
         this.view = new Window(map, this);
-        this.currentState = INITIAL_STATE;
         this.cmdList = new CommandList();
+        setCurrentState(INITIAL_STATE);
         map.addPropertyChangeListener(this);
     }
 
-    protected void setCurrentState(State state) {
+    protected final void setCurrentState(State state) {
         currentState = state;
         state.enterState(view);
         System.out.println(currentState);
     }
     
     public void addDelivery(Node node) {
-        currentState.addDelivery(this, map, node);
+        currentState.addDelivery(map, node);
     }
     
     public void deleteDelivery(Delivery delivery) {
-        currentState.deleteDelivery(this, map, delivery, cmdList);
+        currentState.deleteDelivery(map, delivery, cmdList);
     }
     
     public void moveDelivery(Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndice, int newIndice) {
-        currentState.moveDelivery(this, map, delivery, oldDeliveryMan, newDeliveryMan, oldIndice, newIndice, cmdList);
+        currentState.moveDelivery(map, delivery, oldDeliveryMan, newDeliveryMan, oldIndice, newIndice, cmdList);
     }
      
     public void generateDeliveryMen(int deliveryMenCount) {
-        currentState.generateDeliveryMen(this, map, deliveryMenCount, cmdList);
+        currentState.generateDeliveryMen(map, deliveryMenCount, cmdList);
     }
     
     public void stopGeneration() {
-        currentState.stopGeneration(this, map);
+        currentState.stopGeneration(map);
     }
     
     public void generationFinished(){
-        currentState.generationFinished(this, map);
+        currentState.generationFinished(map);
     }
             
     public void undo() {
@@ -70,19 +70,19 @@ public class MainController implements PropertyChangeListener{
     }
     
     public void leftClick(Point2D p) {
-        currentState.leftClick(this, map, cmdList, view, p);
+        currentState.leftClick(map, cmdList, view, p);
     }
     
     public void rightClick(Point2D p) {
-        currentState.rightClick(this, map, cmdList, view, p);
+        currentState.rightClick(map, cmdList, view, p);
     }
     
     public void loadMap() throws Exception {
-        currentState.loadMap(this, map, cmdList, view);
+        currentState.loadMap(map, cmdList, view);
     }
     
     public void loadDeliveriesFile() throws Exception {
-        currentState.loadDeliveriesFile(this, map, cmdList, view);
+        currentState.loadDeliveriesFile(map, cmdList, view);
     }
     
     public void selectedNode(Node node) {
@@ -98,7 +98,8 @@ public class MainController implements PropertyChangeListener{
         String propertyName = evt.getPropertyName();
         switch (propertyName) {
             case "shortenDeliveriesFinished":
-                currentState.generationFinished(this, map);
+                currentState.generationFinished(map);
         }
     }
+    
 }

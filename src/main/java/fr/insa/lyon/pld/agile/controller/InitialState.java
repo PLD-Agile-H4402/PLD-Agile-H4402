@@ -10,15 +10,20 @@ import java.io.File;
  * @author scheah
  */
 public class InitialState extends DefaultState {
+
+    public InitialState(MainController controller) {
+        super(controller);
+    }
     
     @Override
     public void enterState(Window window) {
         window.setStatusMessage("Prêt");
+        window.setButtonsState(true, false, false, false, false);
     }
     
     @Override
-    public void loadMap(MainController controller, Map map, CommandList cmdList, Window view) throws Exception {
-        File selectedFile = view.askFile("Chargement d'un plan");
+    public void loadMap(Map map, CommandList cmdList, Window view) throws Exception {
+        File selectedFile = view.promptFile("Chargement d'un plan");
         if (selectedFile == null) return;
         map.clear();
         XMLParser.loadMap(map, selectedFile.toPath());

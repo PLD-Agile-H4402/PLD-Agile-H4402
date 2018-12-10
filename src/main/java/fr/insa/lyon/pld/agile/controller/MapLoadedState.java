@@ -12,20 +12,25 @@ import java.io.File;
  * @author scheah
  */
 public class MapLoadedState extends InitialState {
+
+    public MapLoadedState(MainController controller) {
+        super(controller);
+    }
     
     @Override
     public void enterState(Window window) {
         window.setStatusMessage("Prêt");
+        window.setButtonsState(true, true, false, false, false);
     }
     
     @Override
-    public void leftClick(MainController controller, Map map, CommandList cmdList, Window view, Point2D p) {
-        selectNode(controller, map, cmdList, view, p);
+    public void leftClick(Map map, CommandList cmdList, Window view, Point2D p) {
+        selectNode(map, cmdList, view, p);
     }
     
     @Override
-    public void loadDeliveriesFile(MainController controller, Map map, CommandList cmdList, Window view) throws Exception {
-        File selectedFile = view.askFile("Chargement de demandes de livraison");
+    public void loadDeliveriesFile(Map map, CommandList cmdList, Window view) throws Exception {
+        File selectedFile = view.promptFile("Chargement de demandes de livraison");
         if (selectedFile == null) return;
         map.clearDeliveries();
         map.clearWarehouse();
@@ -34,7 +39,7 @@ public class MapLoadedState extends InitialState {
         cmdList.reset();
     }
     
-    protected Node selectNode(MainController controller, Map map, CommandList cmdList, Window view, Point2D p) {
+    protected Node selectNode(Map map, CommandList cmdList, Window view, Point2D p) {
         double closestdistance = -1;
         Node closest = null;
         for (Node n : map.getNodes().values()) {

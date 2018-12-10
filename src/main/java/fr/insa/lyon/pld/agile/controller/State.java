@@ -15,32 +15,32 @@ public interface State {
     
     public void enterState(Window window);
     
-    public void addDelivery(MainController controller, Map map, Node node);
+    public void addDelivery(Map map, Node node);
     
-    public void validateAddDelivery(MainController controller, Map map, DeliveryMan deliveryMan, int ind, CommandList cmdList);
+    public void validateAddDelivery(Map map, DeliveryMan deliveryMan, int ind, CommandList cmdList);
     
-    public void cancelAddDelivery(MainController controller);
+    public void cancelAddDelivery();
     
-    public void deleteDelivery(MainController controller, Map map,Delivery delivery, CommandList cmdList);
+    public void deleteDelivery(Map map, Delivery delivery, CommandList cmdList);
     
-    public void moveDelivery(MainController controller, Map map, Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndice, int newIndice, CommandList cmdList);
+    public void moveDelivery(Map map, Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndice, int newIndice, CommandList cmdList);
     
-    public void generateDeliveryMen(MainController controller, Map map, int deliveryMenCount, CommandList cmdList);
+    public void generateDeliveryMen(Map map, int deliveryMenCount, CommandList cmdList);
     
-    public void stopGeneration(MainController controller, Map map);
+    public void stopGeneration(Map map);
     
-    public void generationFinished(MainController controller, Map map);
+    public void generationFinished(Map map);
     
     public void undo(CommandList cmdList);
     
     public void redo(CommandList cmdList);
     
-    public void leftClick(MainController controller, Map map, CommandList cmdList, Window view, Point2D p);
+    public void leftClick(Map map, CommandList cmdList, Window view, Point2D p);
     
-    public void rightClick(MainController controller, Map map, CommandList cmdList, Window view, Point2D p);
+    public void rightClick(Map map, CommandList cmdList, Window view, Point2D p);
     
-    public void loadMap(MainController controller, Map map, CommandList cmdList, Window view) throws Exception;
+    public void loadMap(Map map, CommandList cmdList, Window view) throws Exception;
     
-    public void loadDeliveriesFile(MainController controller, Map map, CommandList cmdList, Window view) throws Exception;
+    public void loadDeliveriesFile(Map map, CommandList cmdList, Window view) throws Exception;
     
 }

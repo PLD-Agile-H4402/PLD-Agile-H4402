@@ -28,9 +28,9 @@ public class CommandList {
     
     public void undo() {
         if(currentIndex >= 0) {
-            Command c = commandList.get(currentIndex);
+            Command cmd = commandList.get(currentIndex);
             currentIndex--;
-            c.undoCmd();
+            cmd.undoCmd();
         }
     }
     
