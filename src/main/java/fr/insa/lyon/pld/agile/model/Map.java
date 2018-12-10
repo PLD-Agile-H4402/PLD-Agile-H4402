@@ -4,6 +4,8 @@ import fr.insa.lyon.pld.agile.tsp.Dijkstra;
 import fr.insa.lyon.pld.agile.tsp.KMeansV1;
 import fr.insa.lyon.pld.agile.tsp.TSPSolver;
 import fr.insa.lyon.pld.agile.tsp.TSPSolverFactory;
+import fr.insa.lyon.pld.agile.tsp.TSPSolverWorker;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.time.LocalTime;
@@ -25,6 +27,7 @@ public class Map {
     private LocalTime startingHour;
     private final java.util.Map<Long,Delivery> deliveries;
     private final List<DeliveryMan> deliveryMen;
+    private final List<TSPSolverWorker> pendingSolvers;
     
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -38,6 +41,7 @@ public class Map {
         this.startingHour = startingHour;
         this.deliveries = new HashMap<>();
         this.deliveryMen = new ArrayList<>();
+        this.pendingSolvers = Collections.synchronizedList(new ArrayList<TSPSolverWorker>());
     }
     
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -135,10 +139,9 @@ public class Map {
         this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
     }
     
-    public void shortenDeliveries() {
+    public void shortenDeliveriesInBackground() {
         for (DeliveryMan deliveryMan : deliveryMen) {
             List<Delivery> deliveries = new ArrayList<>(deliveryMan.getDeliveries());
-            TSPSolver tspSolver = TSPSolverFactory.getSolver(deliveries.size());
             int[][] edgesCosts = new int[deliveries.size()][deliveries.size()];
             int[] nodesCost = new int[deliveries.size()];
             
@@ -156,16 +159,41 @@ public class Map {
                 nodesCost[i] = from.getDuration();
             }
 
-            List<Integer> bestIds = tspSolver.solve(deliveries.size(), edgesCosts, nodesCost);
+            TSPSolverWorker tspSolver = TSPSolverFactory.getSolver(deliveries.size(), edgesCosts, nodesCost);
+            tspSolver.addPropertyChangeListener((PropertyChangeEvent pce) -> {
+                if (!pce.getPropertyName().equals("intermediateBestPath") && !pce.getPropertyName().equals("finalBestPath"))
+                    return;
+                
+                ArrayList<Integer> bestIds = (ArrayList<Integer>) pce.getNewValue();
+                deliveryMan.clear();
+                
+                for (Integer index : bestIds) {
+                    deliveryMan.addDelivery(deliveries.get(index), Map.this);
+                }
+                
+                Map.this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+                
+                if (pce.getPropertyName().equals("finalBestPath")) {
+                    pendingSolvers.remove(tspSolver);
+                    
+                    if (pendingSolvers.isEmpty()) {
+                        Map.this.pcs.firePropertyChange("shortenDeliveriesFinished", null, deliveryMen);
+                    }
+                }
+            });
             
-            deliveryMan.clear();
-            
-            for (Integer index : bestIds) {
-                deliveryMan.addDelivery(deliveries.get(index), this);
-            }
+            pendingSolvers.add(tspSolver);
+            tspSolver.execute();
         }
-        
-        this.pcs.firePropertyChange("deliveryMen", null, deliveryMen);
+    }
+    
+    public boolean isShorteningDeliveries() {
+        return !pendingSolvers.isEmpty();
+    }
+    
+    public void stopShorteningDeliveries() {
+        for (TSPSolverWorker solver : new ArrayList<>(pendingSolvers))
+            solver.cancel(false);
     }
     
     public void assignDelivery(int index, Delivery delivery, DeliveryMan deliveryMan) {

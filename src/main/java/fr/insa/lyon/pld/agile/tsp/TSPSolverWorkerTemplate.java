@@ -2,6 +2,7 @@ package fr.insa.lyon.pld.agile.tsp;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -117,5 +118,16 @@ public abstract class TSPSolverWorkerTemplate extends TSPSolverWorker {
                 unexploredNodes.add(nextNode);
             }
         }
+    }
+
+    @Override
+    protected void process(List<ArrayList<Integer>> list) {
+        List<Integer> bestPath = list.get(list.size()-1);
+        firePropertyChange("intermediateBestPath", null, bestPath);
+    }
+
+    @Override
+    protected void done() {
+        firePropertyChange("finalBestPath", null, bestPath);
     }
 }
