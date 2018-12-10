@@ -11,7 +11,8 @@ import java.beans.PropertyChangeListener;
  *
  * @author nmesnard
  */
-public abstract class MapView extends JPanel implements PropertyChangeListener {
+public abstract class MapView extends JPanel implements PropertyChangeListener
+{
     
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

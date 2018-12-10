@@ -208,7 +208,7 @@ public class Window
                 for (Route route : map.getDeliveryMen().get(0).getRound().getItinerary()) {
                     for (Passage location : route.getPassages()) {
                         Section currentsection = location.getSection();
-                        if (!currentsection.getName().equals(lastsection.getName())) 
+                        if (lastsection!=null && !currentsection.getName().equals(lastsection.getName())) 
                             ((DefaultListModel<String>)list2.getModel()).addElement(currentsection.getName());
                         lastsection = currentsection;
                     }
