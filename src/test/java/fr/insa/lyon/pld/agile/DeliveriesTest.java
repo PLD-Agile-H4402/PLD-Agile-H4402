@@ -18,6 +18,8 @@ import fr.insa.lyon.pld.agile.model.DeliveryMan;
 import fr.insa.lyon.pld.agile.model.Map;
 import fr.insa.lyon.pld.agile.model.Node;
 import fr.insa.lyon.pld.agile.model.Section;
+import fr.insa.lyon.pld.agile.xml.XMLParser;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
