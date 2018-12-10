@@ -203,25 +203,7 @@ public class MapViewGraphical extends MapView
         
         Point2D coord = getPixelToPoint(e.getX() - deltaX, this.getHeight() - deltaY - e.getY());
         
-        double closestdistance = -1;
-        Node closest = null;
-        for (Node n : map.getNodes().values()) {
-            double distance = Math.pow((coord.getX() - n.getLongitude()), 2)
-                            + Math.pow((coord.getY() - n.getLatitude()), 2);
-            if (closestdistance < 0 || distance < closestdistance) {
-                closestdistance = distance;
-                closest = n;
-            }
-        }
-        
-        if (closestdistance > 15.0) {
-            closest = null;
-        }
-        
-        if (selNode != closest) {
-            selectNode(closest);
-            controller.selectedNode(closest);
-        }
+        controller.leftClick(coord);
     }
     
     @Override
