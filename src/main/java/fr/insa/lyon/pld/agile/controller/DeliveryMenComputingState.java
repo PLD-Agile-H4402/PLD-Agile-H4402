@@ -16,7 +16,7 @@ public class DeliveryMenComputingState extends DefaultState {
     @Override
     public void enterState(Window window) {
         window.setStatusMessage("Génération des tournées en cours...");
-        window.setButtonsState(false, false, false, true, false);
+        window.setButtonsState(false, false, true, false, false, false);
     }
     
     @Override

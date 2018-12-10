@@ -54,7 +54,6 @@ public class Window
         frame.setTitle("PLD Livraison à Domicile");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        // frame.setSize(200,200); //initialize status bar
         
         // Bottom status bar
         JPanel panStatus = new JPanel();
@@ -272,11 +271,6 @@ public class Window
         });
         
         
-        // INITIAL STATE
-        
-        setButtonsState(false, false, false, false, false);
-        
-        
         // READY
         
         frame.pack();
@@ -285,23 +279,23 @@ public class Window
     
     public final void setButtonsState(
         boolean canOpenMap, boolean canOpenLoc,
-        boolean canUndoRedo,
-        boolean canGenerateDeliveries,
-        boolean canAddMoveRemove) {
+        boolean canGenerateDeliveryMen,
+        boolean canEditDeliveries,
+        boolean canUndo, boolean canRedo) {
         
         btnOpenMap.setEnabled(canOpenMap);
         btnOpenLoc.setEnabled(canOpenLoc);
         
-        btnUndo.setEnabled(canUndoRedo);
-        btnRedo.setEnabled(canUndoRedo);
+        btnUndo.setEnabled(canUndo);
+        btnRedo.setEnabled(canRedo);
         
-        numDeliveries.setEnabled(canGenerateDeliveries);
-        btnGenerate.setEnabled(canGenerateDeliveries);
-        btnDeliveryRecords.setEnabled(canGenerateDeliveries);
+        numDeliveries.setEnabled(canGenerateDeliveryMen);
+        btnGenerate.setEnabled(canGenerateDeliveryMen);
+        btnDeliveryRecords.setEnabled(canGenerateDeliveryMen);
         
-        btnListAdd.setEnabled(canAddMoveRemove);
-        btnListMove.setEnabled(canAddMoveRemove);
-        btnListRemove.setEnabled(canAddMoveRemove);
+        btnListAdd.setEnabled(canEditDeliveries);
+        btnListMove.setEnabled(canEditDeliveries);
+        btnListRemove.setEnabled(canEditDeliveries);
     }
     
     public File promptFile(String title){

@@ -8,7 +8,7 @@ import java.util.List;
  * @author scheah
  */
 public class CommandList {
-    private List<Command> commandList; 
+    private final List<Command> commandList; 
     private int currentIndex;
     
     public CommandList() {

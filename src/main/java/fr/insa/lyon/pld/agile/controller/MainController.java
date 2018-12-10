@@ -1,10 +1,13 @@
 package fr.insa.lyon.pld.agile.controller;
 
 import fr.insa.lyon.pld.agile.model.*;
+import fr.insa.lyon.pld.agile.view.MapViewGraphical;
 import fr.insa.lyon.pld.agile.view.Window;
+import fr.insa.lyon.pld.agile.xml.XMLParser;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 
 /**
  *
@@ -62,27 +65,37 @@ public class MainController implements PropertyChangeListener{
     }
             
     public void undo() {
-        currentState.undo(cmdList);
+        cmdList.undo();
     }
     
     public void redo() {
-        currentState.redo(cmdList);
+        cmdList.redo();
     }
     
-    public void leftClick(Point2D p) {
-        currentState.leftClick(map, cmdList, view, p);
+    public void mapClickLeft(MapViewGraphical mapview, Point2D p) {
+        currentState.mapClickLeft(map, cmdList, mapview, p);
     }
-    
-    public void rightClick(Point2D p) {
-        currentState.rightClick(map, cmdList, view, p);
+    public void mapClickRight(MapViewGraphical mapview, Point2D p) {
+        currentState.mapClickRight(map, cmdList, mapview, p);
     }
     
     public void loadMap() throws Exception {
-        currentState.loadMap(map, cmdList, view);
+        File selectedFile = view.promptFile("Chargement d'un plan");
+        if (selectedFile == null) return;
+        cmdList.reset();
+        map.clear();
+        XMLParser.loadMap(map, selectedFile.toPath());
+        setCurrentState(MAP_LOADED_STATE);
     }
     
     public void loadDeliveriesFile() throws Exception {
-        currentState.loadDeliveriesFile(map, cmdList, view);
+        File selectedFile = view.promptFile("Chargement de demandes de livraison");
+        if (selectedFile == null) return;
+        cmdList.reset();
+        map.clearDeliveries();
+        map.clearWarehouse();
+        XMLParser.loadDeliveries(map, selectedFile.toPath());
+        setCurrentState(DELIVERIES_LOADED_STATE);
     }
     
     public void selectedNode(Node node) {
@@ -99,6 +112,7 @@ public class MainController implements PropertyChangeListener{
         switch (propertyName) {
             case "shortenDeliveriesFinished":
                 currentState.generationFinished(map);
+                break;
         }
     }
     

@@ -16,7 +16,7 @@ public class DeliveriesLoadedState extends MapLoadedState {
     @Override
     public void enterState(Window window) {
         window.setStatusMessage("Prêt");
-        window.setButtonsState(true, true, false, true, false);
+        window.setButtonsState(true, true, true, false, false, false);
     }
     
     @Override
@@ -31,4 +31,5 @@ public class DeliveriesLoadedState extends MapLoadedState {
         controller.setCurrentState(controller.DELIVERY_MEN_COMPUTING_STATE);
         cmdList.reset();
     }
+    
 }

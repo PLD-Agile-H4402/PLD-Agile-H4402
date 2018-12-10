@@ -4,6 +4,7 @@ import fr.insa.lyon.pld.agile.model.Delivery;
 import fr.insa.lyon.pld.agile.model.DeliveryMan;
 import fr.insa.lyon.pld.agile.model.Map;
 import fr.insa.lyon.pld.agile.model.Node;
+import fr.insa.lyon.pld.agile.view.MapViewGraphical;
 import fr.insa.lyon.pld.agile.view.Window;
 import java.awt.geom.Point2D;
 
@@ -20,12 +21,12 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
     @Override
     public void enterState(Window window) {
         window.setStatusMessage("Prêt");
-        window.setButtonsState(true, true, true, true, true);
+        window.setButtonsState(true, true, true, true, true, true);
     }
     
     @Override
     public void addDelivery(Map map, Node node) {
-        controller.ADD_DELIVERY_STATE.enterAction(map, node);
+        controller.ADD_DELIVERY_STATE.prepareState(map, node);
         controller.setCurrentState(controller.ADD_DELIVERY_STATE);
     }
     
@@ -42,26 +43,16 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
     }
     
     @Override
-    public void rightClick(Map map, CommandList cmdList, Window view, Point2D p) {
-        Node closest = selectNode(map, cmdList, view, p);
-        if(closest != null) {
+    public void mapClickRight(Map map, CommandList cmdList, MapViewGraphical mapView, Point2D p) {
+        Node closest = mapView.findClosestNode(p);
+        if (closest != null) {
             int deliveryManIndex = map.getNodeDeliveryManIndex(closest);
             if( deliveryManIndex != -1) {
                 Delivery delivery = map.getDeliveries().get(closest.getId());
                 deleteDelivery(map, delivery, cmdList);
             }
-            //view.showOptionsNode(closest);
+            // view.popupMenu(closest, p);
         }
-    }
-    
-    @Override
-    public void undo(CommandList cmdList) {
-        cmdList.undo();
-    }
-    
-    @Override
-    public void redo(CommandList cmdList) {
-        cmdList.redo();
     }
     
 }

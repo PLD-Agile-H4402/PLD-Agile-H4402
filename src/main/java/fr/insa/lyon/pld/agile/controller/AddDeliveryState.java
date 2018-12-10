@@ -18,10 +18,13 @@ public class AddDeliveryState extends DefaultState {
         super(controller);
     }
     
+    protected void prepareState(Map map, Node node) {
+        this.node = node;
+    }
     @Override
     public void enterState(Window window) {
         window.setStatusMessage("Ajout d'un point de livraison");
-        window.setButtonsState(false, false, false, false, false);
+        window.setButtonsState(false, false, false, false, false, false);
     }
     
     @Override
@@ -34,10 +37,6 @@ public class AddDeliveryState extends DefaultState {
     @Override
     public void cancelAddDelivery() {
         controller.setCurrentState(controller.DELIVERY_MEN_GENERATED_STATE);
-    }
-    
-    protected void enterAction(Map map, Node node) {
-        this.node = node;
     }
     
 }
