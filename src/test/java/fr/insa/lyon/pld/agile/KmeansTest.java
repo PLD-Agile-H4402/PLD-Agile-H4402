@@ -22,7 +22,7 @@ public class KmeansTest {
 	int[] clusters = KMeans.kMeans(nodes, clusterNb, null);
 	
 	for(int i=0; i<clusters.length; ++i) {
-	    assertTrue(clusters[i]>=0 && clusters[i]<=clusterNb);
+	    assertTrue(clusters[i]>=0 && clusters[i]<clusterNb);
 	}
 	
     }
