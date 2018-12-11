@@ -47,71 +47,7 @@ public class Window
     List<MapView> mapViews = new ArrayList<>();
     
     private final JScrollPane scrollPanRoadmap;
-    private final JPanel panRoadmap;
-    
-    private class RoutePart {
-        String sectionName;
-        Passage firstPassage;
-        long duration; // seconds
-        double distance; // meters
-        public RoutePart(String sectionName, Passage firstPassage, double distance, long duration){
-            this.sectionName = sectionName;
-            this.firstPassage = firstPassage;
-            this.duration = duration;
-            this.distance = distance;
-        }
-        public void setDuration(int duration){
-            this.duration = duration;
-        }
-        public void setDistance(double distance){
-            this.distance = distance;
-        }
-        public long getDuration(){
-            return this.duration;
-        }
-        public double getDistance(){
-            return this.distance;
-        }
-        @Override
-        public String toString(){
-            return this.firstPassage.getArrivalTime().toString().substring(0, 5) + " - " + this.sectionName + " (" + Long.toString(Math.round(this.distance)) + " m)";
-        }
-    }
-    
-    private List<RoutePart> buildRoadmap(Map map, int deliveryManIndex){
-        List<RoutePart> routeParts = new ArrayList<RoutePart>();
-        
-        String routePartName = null;
-        double distance = 0;
-        long duration = 0;
-        Passage firstPassage = null;
-
-        for (Route route : map.getDeliveryMen().get(deliveryManIndex).getRound().getItinerary()){
-            for (Passage location : route.getPassages()) {
-                Section currentSection = location.getSection();
-                if(routePartName==null && firstPassage==null ){
-                    routePartName= currentSection.getName();
-                    firstPassage = location;
-                }
-                
-                if(currentSection.getName().equals(routePartName)){
-                    distance += currentSection.getLength();
-                    duration += currentSection.getDuration();
-                }
-                else {
-                    routeParts.add(new RoutePart(routePartName, firstPassage, distance, duration));
-                    firstPassage = location;
-                    routePartName = currentSection.getName();
-                    distance = currentSection.getLength();
-                    duration = currentSection.getDuration();                    
-                }
-                
-            }
-        }
-        routeParts.add(new RoutePart(routePartName, firstPassage, distance, duration));
-        
-        return routeParts;
-    }
+    private final RoadmapPanel panRoadmap;
     
     
     
@@ -245,7 +181,7 @@ public class Window
         panTools.add(panLists, BorderLayout.CENTER);
         
         // Roadmap (right panel)
-        panRoadmap = new JPanel();
+        panRoadmap = new RoadmapPanel(this.map, this.controller);
         scrollPanRoadmap = new JScrollPane(panRoadmap);
         
         // Window
@@ -255,6 +191,7 @@ public class Window
         JSplitPane leftPanSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, panMain);
         
         JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanSplit, scrollPanRoadmap);
+        scrollPanRoadmap.setPreferredSize(panStatus.getPreferredSize());
         
         frame.add(tlbTop, BorderLayout.NORTH);
         frame.add(panSplit, BorderLayout.CENTER);
@@ -310,7 +247,9 @@ public class Window
             }
         });
         
+        // todo : supprimer ce bouton ??
         btnDeliveryRecords.addActionListener(e -> {
+            /*
             try {
                 JFrame listDeliveries = new JFrame("Plan de route");
                 listDeliveries.setVisible(true);
@@ -330,6 +269,7 @@ public class Window
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            */
         });
         
         btnGenerate.addActionListener(e -> {
@@ -415,33 +355,14 @@ public class Window
         }
     }
     
-    public void printRoadmap(int deliveryManIndex){
-        try {
-            this.panRoadmap.removeAll();
-            
-            DefaultListModel<String> model = new DefaultListModel<>(); 
-            JList<String> list = new JList<>(model);
-
-            List<RoutePart> routeParts = buildRoadmap(map, deliveryManIndex);
-
-            for(RoutePart part : routeParts){
-                ((DefaultListModel<String>)list.getModel()).addElement(part.toString());
-            }
-
-            this.panRoadmap.add(list);
-            this.panRoadmap.updateUI();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
+   
     public void selectDeliveryMan(int deliveryManIndex) {
         for (MapView view : mapViews) {
             view.selectDeliveryMan(deliveryManIndex);
         }
         
         if(deliveryManIndex>=0) {
-            printRoadmap(deliveryManIndex);
+            this.panRoadmap.displayRoadmap(deliveryManIndex);
         } else{
             this.panRoadmap.removeAll();
             this.panRoadmap.repaint();
