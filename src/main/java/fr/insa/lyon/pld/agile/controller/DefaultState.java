@@ -40,7 +40,9 @@ public abstract class DefaultState implements State {
     @Override
     public void deleteDelivery(Delivery delivery) {}
     @Override
-    public void moveDelivery(Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndex, int newIndex) {}
+    public void assignDelivery(Delivery delivery, DeliveryMan newDeliveryMan, int newIndex) {}
+    @Override
+    public void unassignDelivery(Delivery delivery) {}
     @Override
     public void generateDeliveryMen(int deliveryMenCount) {}
     

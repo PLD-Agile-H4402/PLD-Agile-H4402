@@ -17,6 +17,9 @@ import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 /**
  *
@@ -54,6 +57,28 @@ public class MapViewGraphical extends MapView
     private boolean isDirection = false;
     private boolean isLegend = false;
     private final MapViewGraphicalLegend legend;
+    
+    private final JPopupMenu rightClickNodeMenu;
+    private final JPopupMenu rightClickDeliveryMenu;
+    
+    private final JMenu addDeliveryJMenu;
+    private final JMenu assignDeliveryJMenu;
+    private final JMenuItem unassignDeliveryMenu;
+    private final JMenuItem deleteDeliveryMenu;
+    
+    private final ActionListener unassignDeliveryListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.unassignDelivery(map.getDeliveries().get(selNode.getId()));
+        }
+    };
+    
+    private final ActionListener deleteDeliveryListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.deleteDelivery(map.getDeliveries().get(selNode.getId()));
+        }
+    };
     
     private final MouseAdapter mouseListener = new MouseAdapter() {
         @Override
@@ -123,6 +148,16 @@ public class MapViewGraphical extends MapView
         legend.setVisible(false);
         this.setLayout(null);
         this.add(legend);
+        
+        rightClickDeliveryMenu = new JPopupMenu();
+        assignDeliveryJMenu = new JMenu("Affecter cette livraison à ...");
+        unassignDeliveryMenu = new JMenuItem("Désaffecter cette livraison");
+        deleteDeliveryMenu = new JMenuItem("Supprimer cette livraison");
+        unassignDeliveryMenu.addActionListener(unassignDeliveryListener);
+        deleteDeliveryMenu.addActionListener(deleteDeliveryListener);
+
+        rightClickNodeMenu = new JPopupMenu();
+        addDeliveryJMenu = new JMenu("Ajouter une livraison ici à ...");
     }
     
     @Override
@@ -167,6 +202,7 @@ public class MapViewGraphical extends MapView
     @Override
     public void updateDeliveryMen() {
         selDeliveryMan = -1;
+        updatePopupMenu();
         updateDeliveries();
     }
     
@@ -188,7 +224,6 @@ public class MapViewGraphical extends MapView
     public void selectNode(Node node) {
         if (selNode != node) {
             selNode = node;
-            
             imageSelection = null;
             this.repaint();
         }
@@ -215,7 +250,6 @@ public class MapViewGraphical extends MapView
     public void showDirection(boolean visibility) {
         if (isDirection != visibility) {
             isDirection = visibility;
-            
             imageDeliveries = null;
             this.repaint();
         }
@@ -238,6 +272,25 @@ public class MapViewGraphical extends MapView
         }
         
         return closest;
+    }
+    
+    public void showPopupNode(Point2D coord) {
+        
+    }
+    
+    public void showPopupDelivery(Point2D coord) {
+        
+    }
+    
+    private void updatePopupMenu() {
+        addDeliveryJMenu.removeAll();
+        assignDeliveryJMenu.removeAll();
+        int indexMan = 0;
+        for( DeliveryMan d : map.getDeliveryMen()) {
+            indexMan++;
+            addDeliveryJMenu.add(new JMenuItem("Livreur " + indexMan)).putClientProperty("deliveryManIndex", indexMan);
+            assignDeliveryJMenu.add(new JMenuItem("Livreur " + indexMan)).putClientProperty("deliveryManIndex", indexMan);
+        }
     }
     
     @Override

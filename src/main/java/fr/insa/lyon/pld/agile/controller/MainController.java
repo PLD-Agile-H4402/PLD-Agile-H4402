@@ -51,10 +51,14 @@ public class MainController implements PropertyChangeListener{
         currentState.deleteDelivery(delivery);
     }
     
-    public void moveDelivery(Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndice, int newIndice) {
-        currentState.moveDelivery(delivery, oldDeliveryMan, newDeliveryMan, oldIndice, newIndice);
+    public void assignDelivery(Delivery delivery, DeliveryMan newDeliveryMan, int newIndice) {
+        currentState.assignDelivery(delivery, newDeliveryMan, newIndice);
     }
      
+    public void unassignDelivery(Delivery delivery) {
+        currentState.unassignDelivery(delivery);
+    }
+    
     public void generateDeliveryMen(int deliveryMenCount) {
         currentState.generateDeliveryMen(deliveryMenCount);
     }
