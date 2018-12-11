@@ -182,6 +182,7 @@ public class Window
         
         // Roadmap (right panel)
         panRoadmap = new RoadmapPanel(this.map, this.controller);
+        mapViews.add(panRoadmap);
         scrollPanRoadmap = new JScrollPane(panRoadmap);
         
         // Window
@@ -373,13 +374,6 @@ public class Window
     public void selectDeliveryMan(int deliveryManIndex) {
         for (MapView view : mapViews) {
             view.selectDeliveryMan(deliveryManIndex);
-        }
-        
-        if(deliveryManIndex>=0) {
-            this.panRoadmap.displayRoadmap(deliveryManIndex);
-        } else{
-            this.panRoadmap.removeAll();
-            this.panRoadmap.repaint();
         }
     }
     

@@ -145,6 +145,12 @@ public class RoadmapPanel extends MapView {
 
     @Override
     public void selectDeliveryMan(int deliveryManIndex) {
+        if(deliveryManIndex>=0) {
+            displayRoadmap(deliveryManIndex);
+        } else{
+            removeAll();
+            repaint();
+        }
     }
     
     
