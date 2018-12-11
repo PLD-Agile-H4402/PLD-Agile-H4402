@@ -54,10 +54,8 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
         Node closest = mapView.findClosestNode(p);
         mapView.selectNode(closest);
         if(controller.getMap().getNodeDeliveryManIndex(closest) == -1 && controller.getMap().getDeliveries().get(closest.getId()) == null) {
-            System.err.println("ABEEE");
             mapView.showPopupNode(p);
         } else if (controller.getMap().getNodeDeliveryManIndex(closest) == -1){
-            System.err.println("ABEEEhuoihas");
             mapView.showPopupUnassignedDelivery(p);
         }else {
             mapView.showPopupDelivery(p);
