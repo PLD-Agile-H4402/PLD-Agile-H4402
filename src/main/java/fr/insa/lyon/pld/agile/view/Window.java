@@ -46,11 +46,6 @@ public class Window
     
     List<MapView> mapViews = new ArrayList<>();
     
-    private final JScrollPane scrollPanRoadmap;
-    private final RoadmapPanel panRoadmap;
-    
-    
-    
     public Window(Map map, final MainController controller) {
         this.map = map;
         this.controller = controller;
@@ -181,22 +176,19 @@ public class Window
         panTools.add(panLists, BorderLayout.CENTER);
         
         // Roadmap (right panel)
-        panRoadmap = new RoadmapPanel(this.map, this.controller);
+        RoadmapPanel panRoadmap = new RoadmapPanel(this.map, this.controller);
         mapViews.add(panRoadmap);
-        scrollPanRoadmap = new JScrollPane(panRoadmap);
         
         // Window
         JPanel panMain = new JPanel(new BorderLayout());
         panMain.add(panStatus, BorderLayout.SOUTH);
         panMain.add(mapViewGraphical,BorderLayout.CENTER);
 
-        JSplitPane leftPanSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, panMain);
-        
-        JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanSplit, scrollPanRoadmap);
-        scrollPanRoadmap.setPreferredSize(panStatus.getPreferredSize());
+        JSplitPane rightPanSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panMain, panRoadmap);
+        JSplitPane leftPanSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, rightPanSplit);
 
         frame.add(tlbTop, BorderLayout.NORTH);
-        frame.add(panSplitLeft, BorderLayout.CENTER);
+        frame.add(leftPanSplit, BorderLayout.CENTER);
         
         
         // EVENTS HANDLING
@@ -249,31 +241,6 @@ public class Window
             }
         });
         
-        // todo : supprimer ce bouton ??
-        btnDeliveryRecords.addActionListener(e -> {
-            /*
-            try {
-                JFrame listDeliveries = new JFrame("Plan de route");
-                listDeliveries.setVisible(true);
-                
-                DefaultListModel<String> model2 = new DefaultListModel<>(); 
-                JList<String> list2 = new JList<>(model2);
-                
-                List<RoutePart> routeParts = buildRoadmap(map, 0);
-                
-                for(RoutePart part : routeParts){
-                    ((DefaultListModel<String>)list2.getModel()).addElement(part.toString());
-                }
-                
-                
-                listDeliveries.add(list2);
-                listDeliveries.pack();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            */
-        });
-        
         btnGenerate.addActionListener(e -> {
             int nbDeliveryMen = (int) numDeliveries.getValue();
             controller.generateDeliveryMen(nbDeliveryMen);
@@ -304,8 +271,8 @@ public class Window
         // READY
         
         frame.pack();
-        panSplitRight.setResizeWeight(0.9);
-        panSplitRight.setDividerLocation(0.7);
+        rightPanSplit.setResizeWeight(0.9);
+        rightPanSplit.setDividerLocation(0.7);
         frame.setVisible(true);
     }
     
