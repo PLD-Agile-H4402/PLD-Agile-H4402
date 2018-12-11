@@ -2,9 +2,8 @@ package fr.insa.lyon.pld.agile.controller;
 
 import fr.insa.lyon.pld.agile.model.*;
 
-import fr.insa.lyon.pld.agile.view.Window;
 import fr.insa.lyon.pld.agile.view.MapViewGraphical;
-import java.awt.geom.Point2D;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -18,7 +17,7 @@ public interface State {
     
     public void loadDeliveriesFile() throws Exception;
     
-    public void addDelivery(Node node);
+    public void addDelivery(Node node, DeliveryMan deliveryMan, int index);
     
     public void validateAddDelivery(DeliveryMan deliveryMan, int index);
     
@@ -26,13 +25,13 @@ public interface State {
     
     public void deleteDelivery(Delivery delivery);
     
-    public void moveDelivery(Delivery delivery, DeliveryMan oldDeliveryMan, DeliveryMan newDeliveryMan, int oldIndex, int newIndex);
+    public void assignDelivery(Delivery delivery, DeliveryMan newDeliveryMan, int newIndex);
+    
+    public void unassignDelivery(Delivery delivery);
     
     public void generateDeliveryMen(int deliveryMenCount);
     
-    public void mapClickLeft(MapViewGraphical mapView, Point2D coords);
-    
-    public void mapClickRight(MapViewGraphical mapView, Point2D coords);
+    public void mapClick(MouseEvent event, MapViewGraphical mapView);
     
     public void selectNode(Node node);
     
