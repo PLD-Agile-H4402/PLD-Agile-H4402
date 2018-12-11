@@ -32,7 +32,7 @@ public abstract class DefaultState implements State {
     public void loadDeliveriesFile() throws Exception { }
     
     @Override
-    public void addDelivery(Node node) {}
+    public void addDelivery(Node node, DeliveryMan deliveryMan, int index) {}
     @Override
     public void validateAddDelivery(DeliveryMan deliveryMan, int index) {}
     @Override

@@ -18,7 +18,11 @@ public class CmdUnassignDelivery implements Command {
         this.map = map;
         this.delivery = delivery;
         this.oldDeliveryMan = delivery.getDeliveryMan();
-        this.oldIndex = oldDeliveryMan.getDeliveries().indexOf(this.delivery);
+        if (oldDeliveryMan != null) {
+            this.oldIndex = oldDeliveryMan.getDeliveries().indexOf(this.delivery);
+        } else {
+            this.oldIndex = -1;
+        }
     }
     
     @Override
@@ -30,7 +34,7 @@ public class CmdUnassignDelivery implements Command {
 
     @Override
     public void undoCmd() {
-        if(oldDeliveryMan == null) {
+        if(oldDeliveryMan != null) {
             map.assignDelivery(oldIndex, delivery, oldDeliveryMan);
         }
     }

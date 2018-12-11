@@ -44,8 +44,8 @@ public class MainController implements PropertyChangeListener{
         System.out.println(currentState);
     }
     
-    public void addDelivery(Node node) {
-        currentState.addDelivery(node);
+    public void addDelivery(Node node, DeliveryMan deliveryMan, int index) {
+        currentState.addDelivery(node, deliveryMan, index);
     }
     
     public void deleteDelivery(Delivery delivery) {

@@ -2,7 +2,6 @@ package fr.insa.lyon.pld.agile.controller;
 
 import fr.insa.lyon.pld.agile.model.Delivery;
 import fr.insa.lyon.pld.agile.model.DeliveryMan;
-import fr.insa.lyon.pld.agile.model.Map;
 import fr.insa.lyon.pld.agile.model.Node;
 import fr.insa.lyon.pld.agile.view.MapViewGraphical;
 import fr.insa.lyon.pld.agile.view.Window;
@@ -26,9 +25,10 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
     }
     
     @Override
-    public void addDelivery(Node node) {
-        controller.ADD_DELIVERY_STATE.prepareState(node);
-        controller.setCurrentState(controller.ADD_DELIVERY_STATE);
+    public void addDelivery(Node node, DeliveryMan deliveryMan, int index) {
+        Delivery delivery = new Delivery(node, index, deliveryMan);
+        controller.doCmd(new CmdAddDelivery(controller.getMap(), delivery, deliveryMan, index));
+        controller.setCurrentState(controller.DELIVERY_MEN_GENERATED_STATE);
     }
     
     @Override
@@ -51,8 +51,17 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
     
     @Override
     public void mapClickRight(MapViewGraphical mapView, Point2D p) {
-        mapView.selectNode(mapView.findClosestNode(p));
-        //sqhiofhiosqfhiosq
+        Node closest = mapView.findClosestNode(p);
+        mapView.selectNode(closest);
+        if(controller.getMap().getNodeDeliveryManIndex(closest) == -1 && controller.getMap().getDeliveries().get(closest.getId()) == null) {
+            System.err.println("ABEEE");
+            mapView.showPopupNode(p);
+        } else if (controller.getMap().getNodeDeliveryManIndex(closest) == -1){
+            System.err.println("ABEEEhuoihas");
+            mapView.showPopupUnassignedDelivery(p);
+        }else {
+            mapView.showPopupDelivery(p);
+        }
     }
     
 }

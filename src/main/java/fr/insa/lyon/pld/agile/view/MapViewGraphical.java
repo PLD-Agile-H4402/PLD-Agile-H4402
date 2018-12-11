@@ -60,11 +60,15 @@ public class MapViewGraphical extends MapView
     
     private final JPopupMenu rightClickNodeMenu;
     private final JPopupMenu rightClickDeliveryMenu;
+    private final JPopupMenu rightClickUnassignedDeliveryMenu;
     
     private final JMenu addDeliveryJMenu;
     private final JMenu assignDeliveryJMenu;
-    private final JMenuItem unassignDeliveryMenu;
-    private final JMenuItem deleteDeliveryMenu;
+    private final JMenuItem unassignDeliveryMenuItem;
+    private final JMenuItem deleteDeliveryMenuItem;
+    
+    private final JMenuItem assignDeliveryJMenu2;
+    private final JMenuItem deleteDeliveryMenuItem2;
     
     private final ActionListener unassignDeliveryListener = new ActionListener() {
         @Override
@@ -77,6 +81,26 @@ public class MapViewGraphical extends MapView
         @Override
         public void actionPerformed(ActionEvent e) {
             controller.deleteDelivery(map.getDeliveries().get(selNode.getId()));
+        }
+    };
+    
+    private final ActionListener addDeliveryListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JMenuItem item = (JMenuItem)e.getSource();
+            int index = (Integer)item.getClientProperty("deliveryManIndex");
+            DeliveryMan deliveryMan = map.getDeliveryMen().get(index-1);
+            controller.addDelivery(selNode, deliveryMan, deliveryMan.getDeliveries().size());
+        }
+    };
+    
+    private final ActionListener assignDeliveryListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JMenuItem item = (JMenuItem)e.getSource();
+            int index = (Integer)item.getClientProperty("deliveryManIndex");
+            DeliveryMan deliveryMan = map.getDeliveryMen().get(index-1);
+            controller.assignDelivery(map.getDeliveries().get(selNode.getId()), deliveryMan, deliveryMan.getDeliveries().size());
         }
     };
     
@@ -151,13 +175,25 @@ public class MapViewGraphical extends MapView
         
         rightClickDeliveryMenu = new JPopupMenu();
         assignDeliveryJMenu = new JMenu("Affecter cette livraison à ...");
-        unassignDeliveryMenu = new JMenuItem("Désaffecter cette livraison");
-        deleteDeliveryMenu = new JMenuItem("Supprimer cette livraison");
-        unassignDeliveryMenu.addActionListener(unassignDeliveryListener);
-        deleteDeliveryMenu.addActionListener(deleteDeliveryListener);
+        unassignDeliveryMenuItem = new JMenuItem("Désaffecter cette livraison");
+        deleteDeliveryMenuItem = new JMenuItem("Supprimer cette livraison");
+        unassignDeliveryMenuItem.addActionListener(unassignDeliveryListener);
+        deleteDeliveryMenuItem.addActionListener(deleteDeliveryListener);
+        rightClickDeliveryMenu.add(assignDeliveryJMenu);
+        rightClickDeliveryMenu.add(unassignDeliveryMenuItem);
+        rightClickDeliveryMenu.add(deleteDeliveryMenuItem);
+        
+        assignDeliveryJMenu2 = new JMenu("Affecter cette livraison à ...");
+        deleteDeliveryMenuItem2 = new JMenuItem("Supprimer cette livraison");
+        assignDeliveryJMenu2.addActionListener(unassignDeliveryListener);
+        deleteDeliveryMenuItem2.addActionListener(deleteDeliveryListener);
+        rightClickUnassignedDeliveryMenu = new JPopupMenu();
+        rightClickUnassignedDeliveryMenu.add(assignDeliveryJMenu2);
+        rightClickUnassignedDeliveryMenu.add(deleteDeliveryMenuItem2);
 
         rightClickNodeMenu = new JPopupMenu();
         addDeliveryJMenu = new JMenu("Ajouter une livraison ici à ...");
+        rightClickNodeMenu.add(addDeliveryJMenu);
     }
     
     @Override
@@ -233,7 +269,6 @@ public class MapViewGraphical extends MapView
     public void selectDeliveryMan(int deliveryManIndex) {
         if (selDeliveryMan != deliveryManIndex) {
             selDeliveryMan = deliveryManIndex;
-            
             imageDeliveries = null;
             this.repaint();
         }
@@ -275,21 +310,46 @@ public class MapViewGraphical extends MapView
     }
     
     public void showPopupNode(Point2D coord) {
-        
+        updatePopupMenu();
+        rightClickNodeMenu.show(this, (int)coord.getX(), (int)coord.getY());
+    }
+    
+    public void showPopupUnassignedDelivery(Point2D coord) {
+        updatePopupMenu();
+        rightClickUnassignedDeliveryMenu.show(this, (int)coord.getX(), (int)coord.getY());
     }
     
     public void showPopupDelivery(Point2D coord) {
-        
+        updatePopupMenu();
+        rightClickDeliveryMenu.show(this, (int)coord.getX(), (int)coord.getY());
     }
     
     private void updatePopupMenu() {
         addDeliveryJMenu.removeAll();
         assignDeliveryJMenu.removeAll();
+        assignDeliveryJMenu2.removeAll();
         int indexMan = 0;
         for( DeliveryMan d : map.getDeliveryMen()) {
             indexMan++;
-            addDeliveryJMenu.add(new JMenuItem("Livreur " + indexMan)).putClientProperty("deliveryManIndex", indexMan);
-            assignDeliveryJMenu.add(new JMenuItem("Livreur " + indexMan)).putClientProperty("deliveryManIndex", indexMan);
+            if(selNode != null && indexMan == map.getNodeDeliveryManIndex(selNode)+1) {
+                System.err.println(selNode);
+                System.err.println(indexMan);
+                continue;
+            }
+            JMenuItem itemAdd = new JMenuItem("Livreur " + indexMan);
+            itemAdd.putClientProperty("deliveryManIndex", indexMan);
+            itemAdd.addActionListener(addDeliveryListener);
+            addDeliveryJMenu.add(itemAdd);
+            
+            JMenuItem itemAssign = new JMenuItem("Livreur " + indexMan);
+            itemAssign.putClientProperty("deliveryManIndex", indexMan);
+            itemAssign.addActionListener(assignDeliveryListener);
+            assignDeliveryJMenu.add(itemAssign);
+            
+            JMenuItem itemAssign2 = new JMenuItem("Livreur " + indexMan);
+            itemAssign2.putClientProperty("deliveryManIndex", indexMan);
+            itemAssign2.addActionListener(assignDeliveryListener);
+            assignDeliveryJMenu2.add(itemAssign2);
         }
     }
     

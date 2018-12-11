@@ -18,7 +18,7 @@ public interface State {
     
     public void loadDeliveriesFile() throws Exception;
     
-    public void addDelivery(Node node);
+    public void addDelivery(Node node, DeliveryMan deliveryMan, int index);
     
     public void validateAddDelivery(DeliveryMan deliveryMan, int index);
     
