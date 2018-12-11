@@ -278,6 +278,7 @@ public class Window
         frame.pack();
         rightPanSplit.setResizeWeight(0.9);
         rightPanSplit.setDividerLocation(0.7);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
     
