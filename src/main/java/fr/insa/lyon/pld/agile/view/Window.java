@@ -181,6 +181,7 @@ public class Window
         panRoadmap = new RoadmapPanel(this.map, this.controller);
         mapViews.add(panRoadmap);
         scrollPanRoadmap = new JScrollPane(panRoadmap);
+        scrollPanRoadmap.getVerticalScrollBar().setUnitIncrement(16);
         
         // Window
         JPanel panMain = new JPanel(new BorderLayout());
