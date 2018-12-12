@@ -51,7 +51,9 @@ public class DeliveryMan {
     
     /**
      * adds a delivery
-     * @param the index of a delivery man, the delivery and the map object   
+     * @param index the index of a delivery man 
+     * @param delivery the delivery 
+     * @param map the map object   
      */
     
     void addDelivery(int index, Delivery delivery, Map map) {
@@ -64,7 +66,8 @@ public class DeliveryMan {
     
     /**
      * adds a delivery
-     * @param the delivery, the map object
+     * @param delivery the delivery
+     * @param map the map 
      */
     
     void addDelivery(Delivery delivery, Map map) {
@@ -73,7 +76,8 @@ public class DeliveryMan {
     }
     /**
      * removes a delivery based on the index of a delivery man
-     * @param an index of a delivery man, the map  
+     * @param index an index of a delivery man
+     * @param map the map  
      */
     
     void removeDelivery(int index, Map map) {
@@ -92,8 +96,9 @@ public class DeliveryMan {
     }
     
     /**
-     * removes a delivery based on a delivery
-     * @param a delivery, the map 
+     * removes a delivery based on selected delivery
+     * @param delivery a delivery 
+     * @param map the map 
      */
     
     void removeDelivery(Delivery delivery, Map map) {
@@ -114,7 +119,7 @@ public class DeliveryMan {
     
     /**
      * updates the starting hour of the deliveries
-     * @param the map 
+     * @param map the map 
      */
     
     void updateStartingHour(Map map) {
