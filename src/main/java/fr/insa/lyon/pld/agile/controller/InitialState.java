@@ -25,7 +25,9 @@ public class InitialState extends DefaultState {
     @Override
     public void loadMap() {
         File selectedFile = controller.getWindow().promptFile("Chargement d'un plan", "plans");
-        if (selectedFile == null) return;
+        if (selectedFile == null) {
+            return;
+        }
         controller.resetCmdList();
         controller.getMap().clear();
         
@@ -48,9 +50,9 @@ public class InitialState extends DefaultState {
             controller.getWindow().popupError("Fichier non conforme.");
         }
         
-        if (success)
+        if (success) {
             controller.setCurrentState(controller.MAP_LOADED_STATE);
-        else {
+        } else {
             controller.getMap().clear();
             controller.setCurrentState(controller.INITIAL_STATE);
         }

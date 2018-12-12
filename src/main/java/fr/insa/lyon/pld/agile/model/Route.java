@@ -17,10 +17,11 @@ public class Route {
     }
     
     public Node getDestination() {
-        if (!passages.isEmpty())
+        if (!passages.isEmpty()) {
             return passages.get(passages.size()-1).getSection().getDestination();
-        else
+        } else {
             return null;
+        }
     }
     
     public List<Passage> getPassages() {
@@ -32,10 +33,11 @@ public class Route {
     }
     
     public LocalTime getArrivalTime() {
-        if (!passages.isEmpty())
+        if (!passages.isEmpty()) {
             return passages.get(passages.size()-1).getArrivalTime();
-        else
+        } else {
             return departureTime;
+        }
     }
 
     void setDepartureTime(LocalTime departureTime) {
@@ -49,10 +51,11 @@ public class Route {
     
     void addPassage(Section section) {
         LocalTime arrivalTime;
-        if (!passages.isEmpty())
+        if (!passages.isEmpty()) {
             arrivalTime = passages.get(passages.size()-1).getArrivalTime();
-        else
+        } else {
             arrivalTime = departureTime;
+        }
         arrivalTime = arrivalTime.plusSeconds(section.getDuration());
         passages.add(new Passage(section, arrivalTime));
     }

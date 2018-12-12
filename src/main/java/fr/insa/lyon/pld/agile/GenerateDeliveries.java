@@ -30,11 +30,13 @@ public class GenerateDeliveries {
         List<Delivery> deliveries = new ArrayList<>();
         
         for (Node node : nodes) {
-            if (node == warehouse)
+            if (node == warehouse) {
                 continue;
+            }
             
-            if (deliveries.size() >= nb)
+            if (deliveries.size() >= nb) {
                 break;
+            }
             
             try {
                 Delivery delivery = new Delivery(node, (int) (Math.random()*360+1));

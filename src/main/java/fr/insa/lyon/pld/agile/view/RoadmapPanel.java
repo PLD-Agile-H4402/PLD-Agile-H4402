@@ -46,8 +46,9 @@ public class RoadmapPanel extends MapView {
         
         public RoutePart(String sectionName, Passage firstPassage, double distance, long duration, Delivery delivery){
             this.sectionName = sectionName;
-            if (sectionName == null || sectionName.isEmpty())
+            if (sectionName == null || sectionName.isEmpty()) {
                 this.sectionName = "Rue anonyme";
+            }
             
             this.firstPassage = firstPassage;
             this.duration = duration;
@@ -138,8 +139,9 @@ public class RoadmapPanel extends MapView {
             if (route.isDelivering()) {
                 Delivery delivery = map.getDeliveries().get(route.getDestination().getId());
                 routeParts.add(new RoutePart(routePartName, firstPassage, distance, duration, delivery));
-            } else
+            } else {
                 routeParts.add(new RoutePart(routePartName, firstPassage, distance, duration, null));
+            }
         }
         
         return routeParts;
@@ -166,7 +168,9 @@ public class RoadmapPanel extends MapView {
             
             for(RoutePart part : routeParts){
                 reallist.addElement(part.toString());
-                if (part.delivery != null) reallist.addElement("Livraison (" + part.delivery.getDuration() + " s)");
+                if (part.delivery != null) {
+                    reallist.addElement("Livraison (" + part.delivery.getDuration() + " s)");
+                }
             }
             
             reallist.addElement("*** Fin de la feuille de route du livreur " + Integer.toString(deliveryManIndex+1) + " ***");

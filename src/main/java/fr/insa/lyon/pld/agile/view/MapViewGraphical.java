@@ -100,7 +100,9 @@ public class MapViewGraphical extends MapView
     private final MouseAdapter mouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (!hasData) return;
+            if (!hasData) {
+                return;
+            }
             controller.mapClick(e, MapViewGraphical.this);
         }
         
@@ -111,8 +113,9 @@ public class MapViewGraphical extends MapView
         
         @Override
         public void mouseDragged(MouseEvent event) {
-            if ((event.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) == 0) //Return if not left button
+            if ((event.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) == 0) { //Return if not left button
                 return;
+            }
             
             Point2D actualMousePosition = new Point2D.Double(event.getX(), event.getY());
             offsetX -= (actualMousePosition.getX()-lastMousePosition.getX())/ratio;
@@ -126,8 +129,9 @@ public class MapViewGraphical extends MapView
         
         @Override
         public void mouseReleased(MouseEvent event) {
-            if (event.getButton() == MouseEvent.BUTTON1) //Left button
+            if (event.getButton() == MouseEvent.BUTTON1) { //Left button
                 setCursor(Cursor.getDefaultCursor());
+            }
         }
         
         @Override
@@ -297,7 +301,9 @@ public class MapViewGraphical extends MapView
     public void showLegend(boolean visibility) {
         if (isLegend != visibility) {
             isLegend = visibility;
-            if (visibility) legend.setLocation(12, 12);
+            if (visibility) {
+                legend.setLocation(12, 12);
+            }
             legend.setVisible(visibility);
         }
     }
@@ -407,11 +413,19 @@ public class MapViewGraphical extends MapView
     public void paintComponent(Graphics g0) {
         super.paintComponent(g0);
         
-        if (!hasData) return;
+        if (!hasData) {
+            return;
+        }
         
-        if (imageMap == null) paintMap();
-        if (imageDeliveries == null) paintDeliveries();
-        if (imageSelection == null) paintSelection();
+        if (imageMap == null) {
+            paintMap();
+        }
+        if (imageDeliveries == null) {
+            paintDeliveries();
+        }
+        if (imageSelection == null) {
+            paintSelection();
+        }
         
         int width = this.getWidth();
         int height = this.getHeight();
@@ -488,7 +502,9 @@ public class MapViewGraphical extends MapView
                                 Point coordsn2 = getCoordsToPixel(n2);
                                 
                                 Drawing.drawLineThick(g, coordsn1, coordsn2);
-                                if (isDirection) position = Drawing.drawLineArrows(g, coordsn1, coordsn2, position);
+                                if (isDirection) {
+                                    position = Drawing.drawLineArrows(g, coordsn1, coordsn2, position);
+                                }
                                 
                                 coordsn1 = coordsn2;
                             }
@@ -541,7 +557,9 @@ public class MapViewGraphical extends MapView
     
     private Color getNodeColor(Node n, Color normal) {
         int deliveryManIndex = map.getNodeDeliveryManIndex(n);
-        if (deliveryManIndex < 0) return normal;
+        if (deliveryManIndex < 0) {
+            return normal;
+        }
         return Drawing.getColor(deliveryManIndex, map.getDeliveryMen().size());
     }
     
@@ -597,15 +615,18 @@ public class MapViewGraphical extends MapView
         double ratioY = getHeight()/(latitudeMax - latitudeMin);
         ratioMin = Math.min(ratioX,ratioY);
         ratioMax = 10000000;
-        if (ratio < ratioMin)
+        if (ratio < ratioMin) {
             ratio = ratioMin;
-        if (ratio > ratioMax)
+        }
+        if (ratio > ratioMax) {
             ratio = ratioMax;
+        }
     }
     
     private void updateRatio(double scaleFactor) {
-        if (ratio * scaleFactor < ratioMin || ratio * scaleFactor > ratioMax)
+        if (ratio * scaleFactor < ratioMin || ratio * scaleFactor > ratioMax) {
             return;
+        }
         
         /* On soustrait la différence entre la position de la souris
          * (dans le système de coordonnées de la carte) après le zoom et avant le zoom

@@ -31,7 +31,9 @@ public class MapLoadedState extends InitialState {
     @Override
     public void loadDeliveriesFile() {
         File selectedFile = controller.getWindow().promptFile("Chargement de demandes de livraison", "livraisons");
-        if (selectedFile == null) return;
+        if (selectedFile == null) {
+            return;
+        }
         controller.resetCmdList();
         
         Map map = controller.getMap();
@@ -60,9 +62,9 @@ public class MapLoadedState extends InitialState {
             controller.getWindow().popupError("Fichier non conforme.");
         }
         
-        if (success)
+        if (success) {
             controller.setCurrentState(controller.DELIVERIES_LOADED_STATE);
-        else {
+        } else {
             map.clearDeliveries();
             map.clearWarehouse();
             controller.setCurrentState(controller.MAP_LOADED_STATE);

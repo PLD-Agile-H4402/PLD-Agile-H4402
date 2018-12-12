@@ -103,8 +103,9 @@ public class MapViewGraphicalLegend extends JPanel
         
         @Override
         public void paintComponent(Graphics g) {
-            if (g instanceof Graphics2D)
+            if (g instanceof Graphics2D) {
                 Drawing.enableAntialiasing((Graphics2D) g);
+            }
             g.setColor(Color.gray);
             drawer.draw(g, coords);
         }

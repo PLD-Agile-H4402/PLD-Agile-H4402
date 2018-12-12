@@ -54,8 +54,9 @@ public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
             controller.selectNode(closest);
 
             if (event.getButton() == MouseEvent.BUTTON3) {//Right click
-                if (closest == controller.getMap().getWarehouse())
+                if (closest == controller.getMap().getWarehouse()) {
                     return;
+                }
                 
                 if(controller.getMap().getNodeDeliveryManIndex(closest) == -1 && controller.getMap().getDeliveries().get(closest.getId()) == null) {
                     mapView.showPopupNode(event.getPoint());

@@ -262,8 +262,9 @@ public class Window
             Node selected = mapViewTextual.getSelectedNode();
             if (selected != null) {
                 Delivery delivery = map.getDeliveries().get(selected.getId());  
-                if (delivery != null)
+                if (delivery != null) {
                     controller.unassignDelivery(delivery);
+                }
             }
         });
         
@@ -271,8 +272,9 @@ public class Window
             Node selected = mapViewTextual.getSelectedNode();
             if (selected != null) {
                 Delivery delivery = map.getDeliveries().get(selected.getId());  
-                if (delivery != null)
+                if (delivery != null) {
                     controller.deleteDelivery(delivery);
+                }
             }
         });
         
