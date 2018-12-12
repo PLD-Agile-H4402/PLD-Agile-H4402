@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class IteratorNearestNode implements Iterator<Integer> {
 
-    private Integer[] nodes;
+    private final Integer[] nodes;
     private Integer numberOfNodes;
 
     /**
