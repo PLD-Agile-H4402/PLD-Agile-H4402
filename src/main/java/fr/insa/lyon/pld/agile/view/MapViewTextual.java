@@ -53,7 +53,7 @@ public class MapViewTextual extends MapView
             public void stateChanged(ChangeEvent e) {
                 int deliveryManIndex = panTabs.getSelectedIndex()-1;
                 selectDeliveryMan(deliveryManIndex);
-                controller.selectedDeliveryMan(selDeliveryMan);
+                controller.selectDeliveryMan(selDeliveryMan);
             }
         });
     }
@@ -142,6 +142,9 @@ public class MapViewTextual extends MapView
         jlists = new ArrayList<>();
         lists = new ArrayList<>();
         
+        int prevDeliveryMan = selDeliveryMan;
+        Node prevNode = selNode;
+        
         panTabs.removeAll();
         
         DefaultListModel<ListItem> items = new DefaultListModel<>();
@@ -187,12 +190,10 @@ public class MapViewTextual extends MapView
             }
         }
         
-        int prevDeliveryMan = selDeliveryMan;
-        Node prevNode = selNode;
-        selDeliveryMan = -1;
-        selectDeliveryMan(prevDeliveryMan);
         selNode = null;
         selectNode(prevNode);
+        selDeliveryMan = -1;
+        selectDeliveryMan(prevDeliveryMan);
     }
     
     protected void newTab(String tabName, DefaultListModel<ListItem> tabList, String infos) {
@@ -209,7 +210,7 @@ public class MapViewTextual extends MapView
             Node node = (index == -1 ? null : tabList.get(index).getNode());
             if (selNode != node) {
                 selectNode(node);
-                controller.selectedNode(node);
+                controller.selectNode(node);
             }
         });
         

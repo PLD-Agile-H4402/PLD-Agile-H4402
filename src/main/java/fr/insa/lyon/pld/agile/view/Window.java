@@ -37,9 +37,10 @@ public class Window
     private final JButton btnGenerate;
     
     private final JButton btnListAdd;
+    private final JButton btnListUp;
+    private final JButton btnListDown;
     private final JButton btnListMove;
     private final JButton btnListRemove;
-    private final JButton btnDeliveryRecords;
     
     private final JLabel lblStatus;
     private final JButton btnStatus;
@@ -47,74 +48,14 @@ public class Window
     List<MapView> mapViews = new ArrayList<>();
     
     private final JScrollPane scrollPanRoadmap;
-    private final JPanel panRoadmap;
-    
-    private class RoutePart {
-        String sectionName;
-        Passage firstPassage;
-        long duration; // seconds
-        double distance; // meters
-        public RoutePart(String sectionName, Passage firstPassage, double distance, long duration){
-            this.sectionName = sectionName;
-            this.firstPassage = firstPassage;
-            this.duration = duration;
-            this.distance = distance;
-        }
-        public void setDuration(int duration){
-            this.duration = duration;
-        }
-        public void setDistance(double distance){
-            this.distance = distance;
-        }
-        public long getDuration(){
-            return this.duration;
-        }
-        public double getDistance(){
-            return this.distance;
-        }
-        @Override
-        public String toString(){
-            return this.firstPassage.getArrivalTime().toString().substring(0, 5) + " - " + this.sectionName + " (" + Long.toString(Math.round(this.distance)) + " m)";
-        }
-    }
-    
-    private List<RoutePart> buildRoadmap(Map map, int deliveryManIndex){
-        List<RoutePart> routeParts = new ArrayList<RoutePart>();
-        
-        String routePartName = null;
-        double distance = 0;
-        long duration = 0;
-        Passage firstPassage = null;
-
-        for (Route route : map.getDeliveryMen().get(deliveryManIndex).getRound().getItinerary()){
-            for (Passage location : route.getPassages()) {
-                Section currentSection = location.getSection();
-                if(routePartName==null && firstPassage==null ){
-                    routePartName= currentSection.getName();
-                    firstPassage = location;
-                }
-                
-                if(currentSection.getName().equals(routePartName)){
-                    distance += currentSection.getLength();
-                    duration += currentSection.getDuration();
-                }
-                else {
-                    routeParts.add(new RoutePart(routePartName, firstPassage, distance, duration));
-                    firstPassage = location;
-                    routePartName = currentSection.getName();
-                    distance = currentSection.getLength();
-                    duration = currentSection.getDuration();                    
-                }
-                
-            }
-        }
-        routeParts.add(new RoutePart(routePartName, firstPassage, distance, duration));
-        
-        return routeParts;
-    }
+    private final RoadmapPanel panRoadmap;
     
     
-    
+    /**
+     * constructs a new object of the class Window
+     * @param map passes in the selected map 
+     * @param controller the windows controller 
+     */ 
     public Window(Map map, final MainController controller) {
         this.map = map;
         this.controller = controller;
@@ -129,6 +70,7 @@ public class Window
         
         // Bottom status bar
         JPanel panStatus = new JPanel();
+        panStatus.setPreferredSize(new Dimension(32,32));
         panStatus.setBorder(new BevelBorder(BevelBorder.LOWERED));
         panStatus.setLayout(new BoxLayout(panStatus, BoxLayout.X_AXIS));
         lblStatus = new JLabel("Barre d'état");
@@ -142,8 +84,6 @@ public class Window
         btnOpenMap.setToolTipText("Ouvrir une carte");
         btnOpenLoc = new JButton(new ImageIcon(getClass().getResource("/icons/pin.png")));
         btnOpenLoc.setToolTipText("Ouvrir des points de livraison");
-        btnDeliveryRecords = new JButton(new ImageIcon(getClass().getResource("/icons/list.png")));
-        btnDeliveryRecords.setToolTipText("Générer la liste de livraisons");
         btnUndo = new JButton(new ImageIcon(getClass().getResource("/icons/undo.png")));
         btnUndo.setToolTipText("Annuler");
         btnRedo = new JButton(new ImageIcon(getClass().getResource("/icons/redo.png")));
@@ -162,7 +102,7 @@ public class Window
         
         // > Top settings
         JPanel panDeliveries = new JPanel();
-        SpinnerModel model = new SpinnerNumberModel(3, 1, 12, 1);
+        SpinnerModel model = new SpinnerNumberModel(3, 1, 30, 1);
         numDeliveries = new JSpinner(model);
         // ((JSpinner.DefaultEditor) numDeliveries.getEditor()).getTextField().setEditable(false);
         JLabel lblDeliveries = new JLabel("livreurs");
@@ -176,6 +116,10 @@ public class Window
         // > and their buttons
         btnListAdd = new JButton(new ImageIcon(getClass().getResource("/icons/add.png")));
         btnListAdd.setToolTipText("Ajouter une livraison");
+        btnListUp = new JButton(new ImageIcon(getClass().getResource("/icons/up.png")));
+        btnListUp.setToolTipText("Avancer une livraison");
+        btnListDown = new JButton(new ImageIcon(getClass().getResource("/icons/down.png")));
+        btnListDown.setToolTipText("Retarder une livraison");
         btnListMove = new JButton(new ImageIcon(getClass().getResource("/icons/move.png")));
         btnListMove.setToolTipText("Déplacer une livraison");
         btnListRemove = new JButton(new ImageIcon(getClass().getResource("/icons/delete.png")));
@@ -196,7 +140,6 @@ public class Window
         // Top tool-bar
         tlbTop.add(btnOpenMap);
         tlbTop.add(btnOpenLoc);
-        tlbTop.add(btnDeliveryRecords);
         tlbTop.add(btnUndo);
         tlbTop.add(btnRedo);
         JPanel panSeparator = new JPanel();
@@ -232,9 +175,9 @@ public class Window
         c.gridwidth = 1;
         c.gridy = 1;
         c.gridx = 0;
-        panLists.add(btnListAdd, c);
+        panLists.add(btnListUp, c);
         c.gridx = 1;
-        panLists.add(btnListMove, c);
+        panLists.add(btnListDown, c);
         c.gridx = 2;
         panLists.add(btnListRemove, c);
         
@@ -245,19 +188,23 @@ public class Window
         panTools.add(panLists, BorderLayout.CENTER);
         
         // Roadmap (right panel)
-        panRoadmap = new JPanel();
+        panRoadmap = new RoadmapPanel(this.map, this.controller);
+        mapViews.add(panRoadmap);
         scrollPanRoadmap = new JScrollPane(panRoadmap);
+        scrollPanRoadmap.getVerticalScrollBar().setUnitIncrement(16);
         
         // Window
-        JPanel panMain = new JPanel (new BorderLayout());
+        JPanel panMain = new JPanel(new BorderLayout());
         panMain.add(panStatus, BorderLayout.SOUTH);
         panMain.add(mapViewGraphical,BorderLayout.CENTER);
-        JSplitPane leftPanSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, panMain);
+
+        JSplitPane rightPanSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panMain, scrollPanRoadmap);
+        JSplitPane leftPanSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panTools, rightPanSplit);
         
-        JSplitPane panSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanSplit, scrollPanRoadmap);
-        
+        scrollPanRoadmap.setPreferredSize(panStatus.getPreferredSize());
+
         frame.add(tlbTop, BorderLayout.NORTH);
-        frame.add(panSplit, BorderLayout.CENTER);
+        frame.add(leftPanSplit, BorderLayout.CENTER);
         
         
         // EVENTS HANDLING
@@ -310,28 +257,6 @@ public class Window
             }
         });
         
-        btnDeliveryRecords.addActionListener(e -> {
-            try {
-                JFrame listDeliveries = new JFrame("Plan de route");
-                listDeliveries.setVisible(true);
-                
-                DefaultListModel<String> model2 = new DefaultListModel<>(); 
-                JList<String> list2 = new JList<>(model2);
-                
-                List<RoutePart> routeParts = buildRoadmap(map, 0);
-                
-                for(RoutePart part : routeParts){
-                    ((DefaultListModel<String>)list2.getModel()).addElement(part.toString());
-                }
-                
-                
-                listDeliveries.add(list2);
-                listDeliveries.pack();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-        
         btnGenerate.addActionListener(e -> {
             int nbDeliveryMen = (int) numDeliveries.getValue();
             controller.generateDeliveryMen(nbDeliveryMen);
@@ -339,6 +264,18 @@ public class Window
         
         btnStatus.addActionListener(e -> {
             controller.btnStatusClick();
+        });
+        
+        btnListUp.addActionListener(e -> {
+            // TODO
+        });
+        
+        btnListDown.addActionListener(e -> {
+            // TODO
+        });
+        
+        btnListRemove.addActionListener(e -> {
+            // TODO
         });
         
         cckDirection.addItemListener(e -> {
@@ -351,26 +288,43 @@ public class Window
             mapViewGraphical.showLegend(checked);
         });
         
-        // TODO : replace ugly loop
-        for (Component component : frame.getComponents()) {
-            if (component instanceof JComponent) {
-                JComponent cmpn = (JComponent) component;
-                cmpn.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "strokeESCAPE");
-                cmpn.getActionMap().put("strokeESCAPE", new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        controller.keyEscape();
-                    }
-                });
+        bindKeyAction(frame, "ESCAPE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.keyEscape();
             }
-        }
+        });
+        
         
         // READY
         
         frame.pack();
+        rightPanSplit.setResizeWeight(0.9);
+        rightPanSplit.setDividerLocation(0.7);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
     
+    private static void bindKeyAction(JFrame frm, String key, AbstractAction action) {
+        for (Component cmp : frm.getComponents()) {
+            if (cmp instanceof JComponent) {
+                bindKeyAction((JComponent) cmp, key, action);
+                break;
+            }
+        }
+    }
+    private static void bindKeyAction(JComponent cmp, String key, AbstractAction action) {
+        cmp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), "stroke" + key);
+        cmp.getActionMap().put("stroke" + key, action);
+    }
+    
+    /**
+     * sets the current state of the buttons
+     * @param canOpenMap should the button to open the map be enabled 
+     * @param canOpenLoc can the button to open the location be enabled
+     * @param canGenerateDeliveryMen can the button to generate delivery men be enabled
+     * @param canEditDeliveries false to prevent the user from editing the deliveries
+     */
     public void setButtonsState(
         boolean canOpenMap, boolean canOpenLoc,
         boolean canGenerateDeliveryMen,
@@ -381,21 +335,35 @@ public class Window
         
         numDeliveries.setEnabled(canGenerateDeliveryMen);
         btnGenerate.setEnabled(canGenerateDeliveryMen);
-        btnDeliveryRecords.setEnabled(canGenerateDeliveryMen);
         
         btnListAdd.setEnabled(canEditDeliveries);
+        btnListUp.setEnabled(canEditDeliveries);
+        btnListDown.setEnabled(canEditDeliveries);
         btnListMove.setEnabled(canEditDeliveries);
         btnListRemove.setEnabled(canEditDeliveries);
     }
     
+    /**
+     * unlocks the undo button
+     * @param enabled if true the undo button will be enabled
+     */
     public void setUndoEnabled(boolean enabled) {
         btnUndo.setEnabled(enabled);
     }
     
+    /**
+     * unlocks the redo button
+     * @param enabled if true the redo button will be enabled
+     */
     public void setRedoEnabled(boolean enabled) {
         btnRedo.setEnabled(enabled);
     }
     
+    /**
+     * prompts the user to load a file into the program
+     * @param title the title of the file
+     * @return the file selected
+     */
     public File promptFile(String title){
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File("res/xml"));
@@ -409,58 +377,54 @@ public class Window
         return null;
     }
     
+    /**
+     * displays the pop-up error message
+     * @param message the text to be displayed
+     */
     public void popupError(String message) {
         JOptionPane.showMessageDialog(frame, message, "Erreur", JOptionPane.ERROR_MESSAGE);
     }
     
+    /**
+     * selects a particular node
+     * @param node
+     */
     public void selectNode(Node node) {
         for (MapView view : mapViews) {
             view.selectNode(node);
         }
     }
     
-    public void printRoadmap(int deliveryManIndex){
-        try {
-            this.panRoadmap.removeAll();
-            
-            DefaultListModel<String> model = new DefaultListModel<>(); 
-            JList<String> list = new JList<>(model);
-
-            List<RoutePart> routeParts = buildRoadmap(map, deliveryManIndex);
-
-            for(RoutePart part : routeParts){
-                ((DefaultListModel<String>)list.getModel()).addElement(part.toString());
-            }
-
-            this.panRoadmap.add(list);
-            this.panRoadmap.updateUI();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-    
+    /**
+     * selects a delivery man to assign tasks
+     * @param deliveryManIndex the designated number of the delivery man
+     */
     public void selectDeliveryMan(int deliveryManIndex) {
         for (MapView view : mapViews) {
             view.selectDeliveryMan(deliveryManIndex);
         }
-        
-        if(deliveryManIndex>=0) {
-            printRoadmap(deliveryManIndex);
-        } else{
-            this.panRoadmap.removeAll();
-            this.panRoadmap.repaint();
-        }
     }
     
+    /**
+     *
+     */
     public void clearStatus() {
         lblStatus.setText("");
         btnStatus.setVisible(false);
     }
     
+    /**
+     * sets the message of the current status
+     * @param message the message to be displayed
+     */
     public void setStatusMessage(String message) {
         lblStatus.setText(message);
     }
     
+    /**
+     * sets the status button 
+     * @param caption the text to be displayed
+     */
     public void setStatusButton(String caption) {
         btnStatus.setText(caption);
         btnStatus.setVisible(true);
