@@ -69,7 +69,6 @@ public class RoadmapPanel extends MapView {
         double distance = 0;
         long duration = 0;
         Passage firstPassage = null;
-        boolean readd = false;
         
         for (Route route : map.getDeliveryMen().get(deliveryManIndex).getRound().getItinerary()){
             for (Passage location : route.getPassages()) {
