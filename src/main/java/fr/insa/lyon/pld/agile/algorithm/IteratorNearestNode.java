@@ -38,7 +38,7 @@ public class IteratorNearestNode implements Iterator<Integer> {
             // Update the current path and the set of unexplored nodes
             currentNode = nextNode;
             nodes[numberOfNodes++] = nextNode;
-            candidateNodes.remove((Integer)nextNode);
+            candidateNodes.remove(nextNode);
         }
     }
 

@@ -66,7 +66,7 @@ public class MapViewTextual extends MapView
             boolean insert = dl.isInsert();
             
             if (insert) {
-                ListItem selected = (ListItem) list.getSelectedValue();
+                ListItem selected = list.getSelectedValue();
                 
                 Delivery delivery = map.getDeliveries().get(selected.node.getId());
                 if (delivery == null)

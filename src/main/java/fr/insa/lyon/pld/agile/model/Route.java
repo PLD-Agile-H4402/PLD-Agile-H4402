@@ -42,7 +42,7 @@ public class Route {
         this.departureTime = departureTime;
         LocalTime arrivalTime = departureTime;
         for (Passage passage : passages) {
-            arrivalTime = arrivalTime.plusSeconds((long) passage.getSection().getDuration());
+            arrivalTime = arrivalTime.plusSeconds(passage.getSection().getDuration());
             passage.setArrivalTime(arrivalTime);
         }
     }

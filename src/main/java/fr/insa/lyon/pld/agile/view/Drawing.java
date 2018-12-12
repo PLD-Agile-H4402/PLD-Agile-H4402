@@ -143,7 +143,7 @@ public class Drawing {
      * @return the vector
      */
     protected static double getVectorLength(int vx, int vy) {
-        return Math.sqrt((double) ((vx*vx)+(vy*vy)));
+        return Math.sqrt(((vx*vx)+(vy*vy)));
     }
     
     /**

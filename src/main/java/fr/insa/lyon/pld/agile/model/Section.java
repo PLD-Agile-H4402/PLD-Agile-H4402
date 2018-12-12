@@ -62,6 +62,6 @@ public class Section {
     }
     
     public static long computeDuration(double length) {
-        return (long) Math.round(length/SPEED);
+        return Math.round(length/SPEED);
     }
 }
