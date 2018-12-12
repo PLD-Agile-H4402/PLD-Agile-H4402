@@ -5,7 +5,6 @@ import fr.insa.lyon.pld.agile.model.Map;
 import fr.insa.lyon.pld.agile.model.Node;
 import fr.insa.lyon.pld.agile.model.UnreachableDeliveryException;
 import fr.insa.lyon.pld.agile.xml.XMLParser;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;

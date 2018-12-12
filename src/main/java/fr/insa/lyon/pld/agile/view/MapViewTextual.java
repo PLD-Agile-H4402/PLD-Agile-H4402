@@ -2,23 +2,20 @@ package fr.insa.lyon.pld.agile.view;
 
 import fr.insa.lyon.pld.agile.controller.MainController;
 import fr.insa.lyon.pld.agile.model.*;
-
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridBagLayout;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
-
-import java.util.List;
-import java.util.ArrayList;
 
 public class MapViewTextual extends MapView
 {

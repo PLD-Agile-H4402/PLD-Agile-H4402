@@ -1,11 +1,9 @@
 package fr.insa.lyon.pld.agile.view;
 
 import fr.insa.lyon.pld.agile.model.Node;
-
-import javax.swing.JPanel;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.JPanel;
 
 public abstract class MapView extends JPanel implements PropertyChangeListener
 {
