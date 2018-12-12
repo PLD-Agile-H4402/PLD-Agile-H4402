@@ -18,10 +18,6 @@ import java.util.concurrent.CancellationException;
 import java.util.stream.Collectors;
 import javax.swing.SwingWorker;
 
-/**
- *
- * @author scheah
- */
 public class Map {
     private final java.util.Map<Long, Node> nodes;
     private Node warehouse;

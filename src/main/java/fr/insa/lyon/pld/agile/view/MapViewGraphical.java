@@ -20,10 +20,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-/**
- *
- * @author nmesnard, tzhang
- */
 public class MapViewGraphical extends MapView
 {
     private final MainController controller;

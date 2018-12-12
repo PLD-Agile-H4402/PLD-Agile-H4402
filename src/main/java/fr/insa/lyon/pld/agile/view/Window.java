@@ -15,10 +15,6 @@ import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- *
- * @author nmesnard, tzhang
- */
 public class Window
 {
     private final MainController controller;

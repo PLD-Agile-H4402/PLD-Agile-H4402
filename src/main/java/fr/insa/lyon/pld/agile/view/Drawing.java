@@ -7,10 +7,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-/**
- *
- * @author nmesnard
- */
 public class Drawing {
     
     /**

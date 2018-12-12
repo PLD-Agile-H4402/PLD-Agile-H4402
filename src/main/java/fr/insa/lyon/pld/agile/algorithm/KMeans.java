@@ -12,8 +12,6 @@ import java.util.List;
 /**
  * An implementation of a same size kmeans++
  * The clustering algorithm used in the app
- *
- * @author Mohamed CHALLAL
  */
 public class KMeans {
     

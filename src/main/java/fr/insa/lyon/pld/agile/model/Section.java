@@ -1,9 +1,5 @@
 package fr.insa.lyon.pld.agile.model;
 
-/**
- *
- * @author scheah
- */
 public class Section {
     public static final double SPEED = 15.*1000./3600.; //15 km/h => 15.*1000./3600./s
     

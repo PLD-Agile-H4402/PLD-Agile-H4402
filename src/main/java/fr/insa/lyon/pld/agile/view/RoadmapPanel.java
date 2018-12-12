@@ -19,8 +19,6 @@ import javax.swing.TransferHandler;
 
 /**
  * The part of the main window which displays the roadmap
- *
- * @author challal
  */
 public class RoadmapPanel extends MapView {
     

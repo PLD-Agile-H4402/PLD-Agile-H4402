@@ -8,10 +8,6 @@ import fr.insa.lyon.pld.agile.view.Window;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
-/**
- *
- * @author scheah
- */
 public class DeliveryMenGeneratedState extends DeliveriesLoadedState {
     
     public DeliveryMenGeneratedState(MainController controller) {

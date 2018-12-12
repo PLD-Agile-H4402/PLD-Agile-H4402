@@ -15,10 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MouseInputAdapter;
 
-/**
- *
- * @author nmesnard
- */
 public class MapViewGraphicalLegend extends JPanel
 {
     EmptyBorder spacer = new EmptyBorder(4, 4, 4, 4);

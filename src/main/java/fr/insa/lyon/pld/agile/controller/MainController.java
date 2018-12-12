@@ -7,10 +7,6 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-/**
- *
- * @author Stanley
- */
 public class MainController implements PropertyChangeListener{
     private final Map map;
     private final Window view;

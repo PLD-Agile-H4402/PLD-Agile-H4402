@@ -7,10 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
-/**
- *
- * @author scheah
- */
 public class Round {
     private final List<Route> itinerary;
 

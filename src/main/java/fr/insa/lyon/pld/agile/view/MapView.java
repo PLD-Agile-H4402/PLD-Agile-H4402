@@ -7,10 +7,6 @@ import javax.swing.JPanel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-/**
- *
- * @author nmesnard
- */
 public abstract class MapView extends JPanel implements PropertyChangeListener
 {
     

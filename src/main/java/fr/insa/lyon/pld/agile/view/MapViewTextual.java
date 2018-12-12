@@ -20,10 +20,6 @@ import javax.swing.event.*;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- *
- * @author nmesnard
- */
 public class MapViewTextual extends MapView
 {
     private final MainController controller;

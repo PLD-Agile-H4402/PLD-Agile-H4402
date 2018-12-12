@@ -11,10 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author paul
- */
 public class GenerateDeliveries {
     public static void main(String[] args) throws Exception {
         if (args.length < 2) {

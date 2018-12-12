@@ -9,10 +9,6 @@ import fr.insa.lyon.pld.agile.xml.XMLUndefinedNodeReferenceException;
 import fr.insa.lyon.pld.agile.xml.XMLUnexpectedElementException;
 import java.io.File;
 
-/**
- *
- * @author scheah
- */
 public class InitialState extends DefaultState {
 
     public InitialState(MainController controller) {

@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author scheah
- */
 public class DeliveryMan {
     private final int id;
     private final Round round;
