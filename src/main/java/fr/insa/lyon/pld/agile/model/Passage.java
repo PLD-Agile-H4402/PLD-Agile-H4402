@@ -40,7 +40,7 @@ public class Passage {
      * Sets the passage's arrival time.
      * @param arrivalTime the passage's arrival time
      */
-    public void setArrivalTime(LocalTime arrivalTime) {
+    void setArrivalTime(LocalTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 }
