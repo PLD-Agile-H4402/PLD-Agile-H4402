@@ -10,7 +10,6 @@ import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import static java.awt.image.ImageObserver.WIDTH;
 
 import java.io.File;
 import java.util.List;
