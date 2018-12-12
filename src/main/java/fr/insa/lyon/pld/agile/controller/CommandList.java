@@ -18,6 +18,7 @@ public class CommandList {
         commandList = new LinkedList<>();
         currentIndex = -1;
     }
+    
     /**
      * Add a new command into the commandList, increment the current index and 
      * perform the action
@@ -32,6 +33,7 @@ public class CommandList {
         commandList.add(currentIndex, cmd);
         cmd.doCmd();
     }
+    
     /**
      * Decrement the current index and revert the action, the command is not
      * removed from the command list to allow redoing
@@ -44,6 +46,10 @@ public class CommandList {
         }
     }
     
+    /**
+     * Decrement the current index and revert the action, the command is not
+     * removed from the command list to allow redoing
+     */
     public void redo() {
         if(canRedo()) {
             currentIndex++;

@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import static java.awt.image.ImageObserver.WIDTH;
 
 import java.io.File;
 import java.util.List;
@@ -267,15 +268,33 @@ public class Window
         });
         
         btnListUp.addActionListener(e -> {
-            // TODO
+            Node selected = mapViewTextual.getSelectedNode();
+            if (selected!= null && map.getNodeDeliveryManIndex(selected) != -1) {
+                Delivery delivery = map.getDeliveries().get(selected.getId());
+                int index = delivery.getDeliveryMan().getDeliveries().indexOf(delivery) -1;
+                if (index >= 0) {
+                    controller.assignDelivery(delivery, delivery.getDeliveryMan(), index);
+                }
+            }
         });
         
         btnListDown.addActionListener(e -> {
-            // TODO
+            Node selected = mapViewTextual.getSelectedNode();
+            if (selected!= null && map.getNodeDeliveryManIndex(selected) != -1) {
+                Delivery delivery = map.getDeliveries().get(selected.getId());
+                int index = delivery.getDeliveryMan().getDeliveries().indexOf(delivery) +1;
+                if(index <= delivery.getDeliveryMan().getDeliveries().size() -1) {
+                    controller.assignDelivery(delivery, delivery.getDeliveryMan(), index);
+                }
+            }
         });
         
         btnListRemove.addActionListener(e -> {
-            // TODO
+            Node selected = mapViewTextual.getSelectedNode();
+            if (selected!= null && map.getNodeDeliveryManIndex(selected) != -1) {
+                Delivery delivery = map.getDeliveries().get(selected.getId());  
+                controller.deleteDelivery(delivery);
+            }
         });
         
         cckDirection.addItemListener(e -> {
